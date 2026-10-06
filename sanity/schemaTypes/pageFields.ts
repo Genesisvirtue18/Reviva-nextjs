@@ -5,6 +5,7 @@ import { TextIcon } from '@sanity/icons/Text';
 import { LinkIcon } from '@sanity/icons/Link';
 import { SparklesIcon } from '@sanity/icons/Sparkles';
 import { CodeIcon } from '@sanity/icons/Code';
+import { goldDecorator } from './blocks';
 
 /* The editable content of a page: sections of text and image fields,
    generated from the original HTML by scripts/lib/html-fields.mjs and put
@@ -46,6 +47,7 @@ export const richLine = defineType({
           { title: 'Bold', value: 'strong' },
           { title: 'Italic', value: 'em' },
           { title: 'Underline', value: 'underline' },
+          goldDecorator,
         ],
         annotations: [
           defineArrayMember({

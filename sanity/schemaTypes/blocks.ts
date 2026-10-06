@@ -1,3 +1,4 @@
+import { createElement, type ReactNode } from 'react';
 import { defineArrayMember, defineField, defineType, type ArrayOptions } from 'sanity';
 import { BlockContentIcon } from '@sanity/icons/BlockContent';
 import { ImageIcon } from '@sanity/icons/Image';
@@ -23,11 +24,49 @@ const str = (name: string, title: string, description?: string) => defineField({
 const txt = (name: string, title: string, rows = 3) => defineField({ name, title, type: 'text', rows, description: 'Press Enter for a line break.' });
 const rich = (name: string, title: string) => defineField({ name, title, type: 'richText' });
 const line = (name: string, title: string) =>
-  defineField({ name, title, type: 'richLine', description: 'Select words and use ✦ to give them the gold highlight style.' });
+  defineField({ name, title, type: 'textLine', description: 'To make words gold: select them and click "Gold". Press Shift+Enter for a line break.' });
 const list = (name: string, title: string, of: string, options?: ArrayOptions) =>
   defineField({ name, title, type: 'array', of: [defineArrayMember({ type: of })], options });
 const plain = (blocks?: { children?: { text?: string }[] }[]) =>
   (blocks ?? []).map((b) => (b.children ?? []).map((c) => c.text ?? '').join('')).join(' ').replace(/\s+/g, ' ').trim();
+
+// ---- gold highlight --------------------------------------------------------------
+
+const GOLD = '#c49a5a';
+/* The site's gold word style (<span> inside headings). A decorator like Bold:
+   text typed inside or at the end of gold text stays gold. */
+export const goldDecorator = {
+  title: 'Gold highlight',
+  value: 'highlight',
+  icon: () => createElement('span', { style: { color: GOLD, fontWeight: 700, fontSize: 12 } }, 'Gold'),
+  component: ({ children }: { children?: ReactNode }) => createElement('span', { style: { color: GOLD } }, children),
+};
+
+/* One line of text with optional gold words (titles, card texts...). */
+export const textLine = defineType({
+  name: 'textLine',
+  title: 'Text',
+  type: 'array',
+  of: [
+    defineArrayMember({
+      type: 'block',
+      styles: [{ title: 'Normal', value: 'normal' }],
+      lists: [],
+      marks: {
+        decorators: [goldDecorator, { title: 'Bold', value: 'strong' }, { title: 'Italic', value: 'em' }],
+        annotations: [
+          defineArrayMember({
+            name: 'link',
+            title: 'Link',
+            type: 'object',
+            icon: LinkIcon,
+            fields: [defineField({ name: 'href', title: 'URL', type: 'string' }), defineField({ name: 'attrs', type: 'string', hidden: true })],
+          }),
+        ],
+      },
+    }),
+  ],
+});
 
 // ---- shared objects -----------------------------------------------------------
 
@@ -90,6 +129,7 @@ export const richText = defineType({
           { title: 'Bold', value: 'strong' },
           { title: 'Italic', value: 'em' },
           { title: 'Underline', value: 'underline' },
+          goldDecorator,
         ],
         annotations: [
           defineArrayMember({
@@ -574,7 +614,7 @@ export const PAGE_BLOCKS = [
 ];
 
 export const blockTypes = [
-  picture, linkItem, buttonLink, richText, figure,
+  textLine, picture, linkItem, buttonLink, richText, figure,
   serviceHero, overviewColumn, serviceOverview, procedureStep, procedure, beforeAfter, faqItem, faq, ctaBanner, banner,
   pageHero, legalHero, legalClause, legalContent, galleryFilters, galleryGrid,
   articleText, articleBox, articleCard, articleCards, articleListItem, articleList, articleImage, articleButton, articleCallout, articleSection, article,

@@ -21,7 +21,8 @@ export type Block = {
 export type Figure = Picture & { _type: 'figure'; _key: string; className?: string };
 export type RichValue = (Block | Figure | { _type: string; _key: string })[];
 
-const DECORATOR: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u' };
+// "highlight" is the gold word style: a plain <span> (styled by the site's CSS).
+const DECORATOR: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u', highlight: 'span' };
 
 /** Block styles -> element + class (the old site's paragraph variants). */
 export const STYLE_TAG: Record<string, { tag: string; className?: string }> = {

@@ -6,7 +6,7 @@
 export class Unsupported extends Error {}
 
 const INLINE = new Set(['a', 'span', 'strong', 'b', 'em', 'i', 'u', 'br', 'time', 'small', 'sup', 'sub', 'mark', 'abbr', 'cite', 'q', 's', 'del', 'ins', 'font', 'code', 'label']);
-const DECORATOR = { strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline' };
+const DECORATOR = { strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', span: 'highlight' };
 const P_CLASS_STYLE = { 'center-text': 'center', highlight: 'highlight', 'center-line': 'centerLine' };
 
 let keyN = 0;

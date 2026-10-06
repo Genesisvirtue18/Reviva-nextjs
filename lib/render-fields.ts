@@ -9,7 +9,7 @@ import type { PageSection, PortableBlock } from './types';
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const escAttr = (s: string) => esc(s).replace(/"/g, '&quot;');
 
-const DECORATOR_TAG: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u' };
+const DECORATOR_TAG: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u', highlight: 'span' };
 
 /* Original attributes in their original order; `override` (an edited href)
    replaces a value in place. */

@@ -24,7 +24,7 @@ const SKIP = new Set(['script', 'style', 'noscript', 'template', 'iframe', 'sele
 const INLINE = new Set(['a', 'span', 'strong', 'b', 'em', 'i', 'u', 'br', 'time', 'small', 'sup', 'sub', 'mark', 'abbr', 'cite', 'q', 's', 'del', 'ins', 'label', 'font', 'code', 'kbd', 'bdi', 'data', 'wbr']);
 // Inline things kept verbatim inside text (icons, inputs).
 const ATOMIC = new Set(['svg', 'input', 'wbr']);
-const DECORATOR = { strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline' };
+const DECORATOR = { strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', span: 'highlight' };
 
 const LABELS = {
   h1: 'Heading 1', h2: 'Heading 2', h3: 'Heading 3', h4: 'Heading 4', h5: 'Heading 5', h6: 'Heading 6',
