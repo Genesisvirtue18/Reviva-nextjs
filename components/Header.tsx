@@ -7,13 +7,28 @@ import type { SiteSettings } from '@/lib/types';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-export default function Header({ s }: { s: SiteSettings }) {
+/* Current-page marking used to happen in custom.js, but mutating the header
+   before hydration made React report a mismatch - so it is rendered here.
+   Links and the current path are compared as clean paths ("/about",
+   "https://site/about#x" and "about" all match /about). */
+const norm = (href: string) => {
+  const p = href.replace(/^https?:\/\/[^/]+/i, '').split('#')[0].split('?')[0];
+  return ('/' + p.replace(/^\/+/, '')).replace(/\.html$/i, '').replace(/\/(index)?$/i, '') || '/';
+};
+
+export default function Header({ s, path }: { s: SiteSettings; path: string }) {
+  const here = norm(path);
+  const current = (href?: string) =>
+    href && href[0] !== '#' && !/^(tel:|mailto:|https?:\/\/(?!(www\.)?revivaskinandsurgery\.com))/i.test(href) && norm(href) === here
+      ? ('page' as const)
+      : undefined;
+
   return (
     <header className="rv-header">
       <a className="rv-skip" href="#main">Skip to content</a>
 
       <div className="rv-header__bar">
-        <a className="rv-brand" href="/" aria-label={`${s.logoAlt} — home`}>
+        <a className="rv-brand" href="/" aria-current={current('/')} aria-label={`${s.logoAlt} — home`}>
           <img src={s.logo} alt={s.logoAlt} width={180} height={44} />
         </a>
 
@@ -35,7 +50,7 @@ export default function Header({ s }: { s: SiteSettings }) {
                           {col.description ? <p>{col.description}</p> : null}
                           <ul>
                             {col.links.map((l) => (
-                              <li key={l.href + l.label}><a href={l.href}>{l.label}</a></li>
+                              <li key={l.href + l.label}><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>
                             ))}
                           </ul>
                         </div>
@@ -44,7 +59,7 @@ export default function Header({ s }: { s: SiteSettings }) {
                   </div>
                 </li>
               ) : (
-                <li className="rv-nav__item" key={item.label}><a className="rv-nav__link" href={item.href}>{item.label}</a></li>
+                <li className="rv-nav__item" key={item.label}><a className="rv-nav__link" href={item.href} aria-current={current(item.href)}>{item.label}</a></li>
               ),
             )}
           </ul>
@@ -56,7 +71,7 @@ export default function Header({ s }: { s: SiteSettings }) {
             <span className="rv-call__label">{s.callDisplay}</span>
           </a>
 
-          <a className="rv-cta" href={s.bookUrl}><span className="rv-cta__full">Book Now</span><span className="rv-cta__short">Book</span></a>
+          <a className="rv-cta" href={s.bookUrl}><span className="rv-cta__full">{s.bookLabel}</span><span className="rv-cta__short">{s.bookLabelShort}</span></a>
 
           <button className="rv-toggle" type="button" aria-expanded="false" aria-controls="rv-nav" aria-label="Open menu">
             <span className="rv-toggle__box" aria-hidden="true"><span></span><span></span><span></span></span>

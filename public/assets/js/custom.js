@@ -210,29 +210,7 @@
       desktop.addListener(onBreakpoint);          // Safari < 14
     }
 
-    /* ---- current page ---------------------------------------------------- */
-
-    // "/" and "/index.html" are the same page, and the Home links point at
-    // "./" (or "../" from blog/) rather than naming index.html - so both sides
-    // are reduced to a file name, with the bare-directory forms read as
-    // index.html, before comparing.
-    var fileOf = function (path, isHref) {
-      var clean = path.split('#')[0].split('?')[0];
-      var f = clean.split('/').pop().toLowerCase();
-      if (f !== '') { return f; }
-      // For the current location a bare directory is the home page. For a
-      // link only the Home forms count, so a future "blog/"-style link is
-      // never mistaken for Home.
-      return (!isHref || /^(\.{1,2}\/|\/)$/.test(clean)) ? 'index.html' : clean;
-    };
-    var here = fileOf(window.location.pathname, false);
-    $$('a[href]', header).forEach(function (link) {
-      var href = link.getAttribute('href');
-      if (!href || href.charAt(0) === '#' || /^(https?:|tel:|mailto:)/i.test(href)) { return; }
-      if (fileOf(href, true) === here) {
-        link.setAttribute('aria-current', 'page');
-      }
-    });
+    // Current-page aria-current is rendered server-side by components/Header.tsx.
   }
 
   /* ======================================================================

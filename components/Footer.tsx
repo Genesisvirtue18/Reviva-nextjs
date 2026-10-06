@@ -40,8 +40,8 @@ export default function Footer({ s }: { s: SiteSettings }) {
             </div>
           </div>
 
-          <nav className="rv-footer__col" aria-label="Treatments">
-            <h3>Treatments</h3>
+          <nav className="rv-footer__col" aria-label={s.footerHeadings.treatments}>
+            <h3>{s.footerHeadings.treatments}</h3>
             <ul>
               {s.footerTreatments.map((l) => (
                 <li key={l.href + l.label}><a className="rv-footer__link" href={l.href}>{l.label}</a></li>
@@ -49,8 +49,8 @@ export default function Footer({ s }: { s: SiteSettings }) {
             </ul>
           </nav>
 
-          <nav className="rv-footer__col" aria-label="Clinic">
-            <h3>Clinic</h3>
+          <nav className="rv-footer__col" aria-label={s.footerHeadings.clinic}>
+            <h3>{s.footerHeadings.clinic}</h3>
             <ul>
               {s.footerClinic.map((l) => (
                 <li key={l.href + l.label}><a className="rv-footer__link" href={l.href}>{l.label}</a></li>
@@ -59,7 +59,7 @@ export default function Footer({ s }: { s: SiteSettings }) {
           </nav>
 
           <div className="rv-footer__col">
-            <h3>Visit Us</h3>
+            <h3>{s.footerHeadings.visit}</h3>
 
             {s.locations.map((loc) => (
               <div className="rv-location" key={loc.name}>
@@ -80,7 +80,7 @@ export default function Footer({ s }: { s: SiteSettings }) {
             </div>
 
             <div className="rv-hours">
-              <h4>Clinic Hours</h4>
+              <h4>{s.footerHeadings.hours}</h4>
               <p>{s.hours}</p>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function Footer({ s }: { s: SiteSettings }) {
 
         <div className="rv-footer__bottom">
           <p className="rv-footer__copy">
-            © <span id="rv-year">{new Date().getFullYear()}</span> Reviva Skin &amp; Surgery Clinic. All rights reserved.
+            © <span id="rv-year">{new Date().getFullYear()}</span> {s.copyright}
           </p>
           <ul className="rv-footer__legal">
             {s.legal.map((l) => (

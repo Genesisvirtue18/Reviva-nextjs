@@ -1,6 +1,19 @@
 import type { NextConfig } from 'next';
-import redirects from './content/redirects.json';
+import { createClient } from '@sanity/client';
+import fallbackRedirects from './content/redirects.json';
+import type { Redirect } from './lib/types';
 
+/* Redirects are edited in Sanity (Redirects) and read at build time; the
+   JSON snapshot of the old .htaccess is used until Sanity is connected. */
+async function loadRedirects(): Promise<Redirect[]> {
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  if (!projectId) return fallbackRedirects;
+  const client = createClient({ projectId, dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production', apiVersion: '2025-01-01', useCdn: false, perspective: 'published', token: process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_WRITE_TOKEN });
+  const fromCms = await client.fetch<Redirect[]>(`*[_type == "redirect" && defined(source) && defined(destination)]{source, destination}`);
+  return fromCms.length ? fromCms : fallbackRedirects;
+}
+
+// Old PHP URLs of the landing pages served by app/lp/[slug].
 const LANDING_PAGES = ['skin-care-clinic-in-noida', 'skin-clinic-in-noida'];
 
 const nextConfig: NextConfig = {
@@ -11,26 +24,15 @@ const nextConfig: NextConfig = {
   // The content JSON is read from disk at runtime when Sanity isn't configured.
   outputFileTracingIncludes: {
     '/[[...path]]': ['./content/pages/**/*'],
+    '/lp/[slug]': ['./public/lp/*/index.html'],
   },
 
   async redirects() {
     return [
       // 301s carried over from the old .htaccess (blogN.html and root-level blog URLs).
-      ...redirects.map((r) => ({ ...r, statusCode: 301 as const })),
+      ...(await loadRedirects()).map((r) => ({ ...r, statusCode: 301 as const })),
       ...LANDING_PAGES.map((name) => ({ source: `/lp/${name}/index.php`, destination: `/lp/${name}`, statusCode: 301 as const })),
     ];
-  },
-
-  async rewrites() {
-    return {
-      // The old PHP landing pages (pure HTML inside) live in public/lp.
-      beforeFiles: LANDING_PAGES.map((name) => ({
-        source: `/lp/${name}`,
-        destination: `/lp/${name}/index.html`,
-      })),
-      afterFiles: [],
-      fallback: [],
-    };
   },
 
   async headers() {

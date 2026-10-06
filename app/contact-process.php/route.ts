@@ -8,7 +8,7 @@ import { writeClient } from '@/lib/sanity';
 const TRACKING = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'referrer', 'landing_page'] as const;
 
 export async function GET(req: NextRequest) {
-  return NextResponse.redirect(new URL('/contact.html', req.url), 303);
+  return NextResponse.redirect(new URL('/contact', req.url), 303);
 }
 
 export async function POST(req: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     wantsJson
       ? NextResponse.json({ ok, message }, { status: ok ? 200 : 422 })
       : ok
-        ? NextResponse.redirect(new URL('/contact.html?sent=1', req.url), 303)
+        ? NextResponse.redirect(new URL('/contact?sent=1', req.url), 303)
         : new NextResponse(message, { status: 422 });
 
   const form = await req.formData();

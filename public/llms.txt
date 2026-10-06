@@ -7,28 +7,28 @@ Reviva Skin & Surgery Clinic is a premium dermatology, cosmetology, laser and ae
 
 Primary Website Pages:
 https://revivaskinandsurgery.com/
-https://revivaskinandsurgery.com/about.html
-https://revivaskinandsurgery.com/treatments.html
-https://revivaskinandsurgery.com/gallery.html
-https://revivaskinandsurgery.com/reviews.html
-https://revivaskinandsurgery.com/blog.html
-https://revivaskinandsurgery.com/contact.html
+https://revivaskinandsurgery.com/about
+https://revivaskinandsurgery.com/treatments
+https://revivaskinandsurgery.com/gallery
+https://revivaskinandsurgery.com/reviews
+https://revivaskinandsurgery.com/blog
+https://revivaskinandsurgery.com/contact
 
 Treatment Pages:
-https://revivaskinandsurgery.com/laser.html
-https://revivaskinandsurgery.com/Butox.html
-https://revivaskinandsurgery.com/acne.html
-https://revivaskinandsurgery.com/hair.html
-https://revivaskinandsurgery.com/antiageing.html
-https://revivaskinandsurgery.com/underarm.html
-https://revivaskinandsurgery.com/skin.html
+https://revivaskinandsurgery.com/laser
+https://revivaskinandsurgery.com/butox
+https://revivaskinandsurgery.com/acne
+https://revivaskinandsurgery.com/hair
+https://revivaskinandsurgery.com/antiageing
+https://revivaskinandsurgery.com/underarm
+https://revivaskinandsurgery.com/skin
 
 Legal Pages:
-https://revivaskinandsurgery.com/privacy-policy.html
-https://revivaskinandsurgery.com/cookie-policy.html
-https://revivaskinandsurgery.com/no-refund-policy.html
-https://revivaskinandsurgery.com/patient-data-protection.html
-https://revivaskinandsurgery.com/treatment-disclaimer.html
+https://revivaskinandsurgery.com/privacy-policy
+https://revivaskinandsurgery.com/cookie-policy
+https://revivaskinandsurgery.com/no-refund-policy
+https://revivaskinandsurgery.com/patient-data-protection
+https://revivaskinandsurgery.com/treatment-disclaimer
 
 Clinic Services:
 - Laser Hair Removal
