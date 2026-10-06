@@ -6,10 +6,11 @@ import { renderFields } from './render-fields';
 import type { DocMeta, Page, PageSection, SiteSettings } from './types';
 import type { Post, PostCard } from '@/components/blog';
 
-/* All content comes from Sanity (there is no offline copy). Tagged fetches
-   let the Sanity webhook refresh pages the moment an editor publishes. */
+/* All content comes from Sanity (there is no offline copy), read fresh on
+   every request: whatever is published shows on the next page load - no
+   cache, no webhook. */
 
-const FETCH_OPTS = { next: { revalidate: 3600, tags: ['sanity'] } };
+const FETCH_OPTS = { cache: 'no-store' as const };
 
 // Technical HTML fields were Sanity "code" objects ({code}); now plain text.
 const html = (f: string) => `"${f}": coalesce(${f}.code, ${f})`;
@@ -21,6 +22,7 @@ const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slug][0]{
   ${META}, ${POST_FIELDS}, author, body, design, seoTitle }`);
 const CARDS_QUERY = defineQuery(`*[_type == "post" && defined(slug.current) && defined(publishedAt)] | order(publishedAt desc, _createdAt desc){ ${POST_FIELDS} }`);
 const PATHS_QUERY = defineQuery(`[...*[_type == "page" && defined(path)].path, ...*[_type == "post" && defined(slug.current)]{"p": "/blog/" + slug.current}.p]`);
+const REDIRECT_QUERY = defineQuery(`*[_type == "redirect" && source in $paths][0].destination`);
 const SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{..., "logoImageUrl": logoImage.asset->url}`);
 const LANDING_QUERY = defineQuery(`*[_type == "landingPage" && slug.current == $slug][0]{"html": html.code, "templateHtml": templateHtml.code, sections}`);
 
@@ -73,6 +75,13 @@ export const getDoc = cache(async (urlPath: string) => {
   const page = await getPage(urlPath);
   return page ? { kind: 'page' as const, ...page, headTitle: page.title } : null;
 });
+
+/** A Redirect (Sanity → Redirects) for an address that has no page. Old
+    ".html" sources match too: proxy.ts strips ".html" before pages run. */
+export async function getRedirect(urlPath: string): Promise<string | null> {
+  const p = normalise(urlPath);
+  return client.fetch<string | null>(REDIRECT_QUERY, { paths: [p, `${p}.html`, `${p}/index.html`] }, FETCH_OPTS);
+}
 
 export async function getAllPaths(): Promise<string[]> {
   return client.fetch<string[]>(PATHS_QUERY, {}, FETCH_OPTS);

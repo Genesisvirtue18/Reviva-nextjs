@@ -3,7 +3,7 @@ import { getAllPaths } from '@/lib/content';
 
 /* /sitemap.xml, built from the pages in Sanity (replaces the static file of
    the old site). */
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 const SITE = 'https://revivaskinandsurgery.com';
 

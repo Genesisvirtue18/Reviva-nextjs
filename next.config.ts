@@ -1,15 +1,4 @@
 import type { NextConfig } from 'next';
-import { createClient } from '@sanity/client';
-import type { Redirect } from './lib/types';
-
-/* Redirects are edited in Sanity (Redirects) and read at build time. */
-async function loadRedirects(): Promise<Redirect[]> {
-  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  if (!projectId) throw new Error('NEXT_PUBLIC_SANITY_PROJECT_ID is not set - all site content comes from Sanity.');
-  const client = createClient({ projectId, dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production', apiVersion: '2025-01-01', useCdn: false, perspective: 'published', token: process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_WRITE_TOKEN });
-  const fromCms = await client.fetch<Redirect[]>(`*[_type == "redirect" && defined(source) && defined(destination)]{source, destination}`);
-  return fromCms;
-}
 
 // Old PHP URLs of the landing pages served by app/lp/[slug].
 const LANDING_PAGES = ['skin-care-clinic-in-noida', 'skin-clinic-in-noida'];
@@ -21,8 +10,7 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
-      // 301s carried over from the old .htaccess (blogN.html and root-level blog URLs).
-      ...(await loadRedirects()).map((r) => ({ ...r, statusCode: 301 as const })),
+      // Redirects edited in Sanity are applied at request time (app/[[...path]]/layout.tsx).
       ...LANDING_PAGES.map((name) => ({ source: `/lp/${name}/index.php`, destination: `/lp/${name}`, statusCode: 301 as const })),
     ];
   },

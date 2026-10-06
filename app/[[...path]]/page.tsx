@@ -1,5 +1,5 @@
-import { notFound } from 'next/navigation';
-import { getDoc, getPostCards, getSettings, toUrlPath } from '@/lib/content';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { getDoc, getPostCards, getRedirect, getSettings, toUrlPath } from '@/lib/content';
 import { Blocks, WhatsAppButton } from '@/components/blocks';
 import { PostView } from '@/components/blog';
 
@@ -9,7 +9,11 @@ import { PostView } from '@/components/blog';
 export default async function SitePage({ params }: PageProps<'/[[...path]]'>) {
   const { path } = await params;
   const doc = await getDoc(toUrlPath(path));
-  if (!doc) notFound();
+  if (!doc) {
+    const to = await getRedirect(toUrlPath(path));
+    if (to) permanentRedirect(to);
+    notFound();
+  }
   const settings = await getSettings();
 
   if (doc.kind === 'post') {
