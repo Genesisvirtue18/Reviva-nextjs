@@ -26,9 +26,8 @@ function fixBlock(b) {
     b.markDefs = b.markDefs.filter((d) => !gold.has(d._key));
     for (const c of b.children ?? []) {
       if (!c.marks) continue;
-      const before = c.marks.length;
+      if (c.marks.some((m) => gold.has(m))) converted++;
       c.marks = c.marks.map((m) => (gold.has(m) ? 'highlight' : m));
-      if (c.marks.some((m, i) => m === 'highlight' && before)) converted++;
     }
   }
   const kids = b.children ?? [];
