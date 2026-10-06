@@ -11,14 +11,17 @@ const Line = ({ value }: { value?: RichValue }) => {
 const Img = ({ p }: { p?: Picture }) => <img src={pictureSrc(p)} alt={p?.alt ?? ''} />;
 const num = (i: number) => String(i + 1).padStart(2, '0');
 
+type HeroButton = { label?: string; href?: string; newTab?: boolean };
+const newTab = (b?: HeroButton) => (b?.newTab ? { target: '_blank', rel: 'noopener' } : {});
+
 export type HomeHeroBlock = {
   _type: 'homeHero';
   _key: string;
   eyebrow?: string;
   title?: RichValue;
   text?: string;
-  primary?: { label?: string; href?: string };
-  secondary?: { label?: string; href?: string };
+  primary?: HeroButton;
+  secondary?: HeroButton;
   contacts?: { _key: string; label?: string; phone?: string; tel?: string }[];
   stats?: { _key: string; value?: string; label?: string }[];
 };
@@ -37,12 +40,12 @@ export function HomeHero({ b }: { b: HomeHeroBlock }) {
         </p>
         <div className="hero-buttons">
           {b.primary?.label ? (
-            <a href={b.primary.href} className="primary-btn">
+            <a href={b.primary.href} className="primary-btn" {...newTab(b.primary)}>
               {b.primary.label}
             </a>
           ) : null}
           {b.secondary?.label ? (
-            <a href={b.secondary.href} className="secondary-btn">
+            <a href={b.secondary.href} className="secondary-btn" {...newTab(b.secondary)}>
               {b.secondary.label}
             </a>
           ) : null}
