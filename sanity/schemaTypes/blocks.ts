@@ -348,11 +348,40 @@ export const articleBox = defineType({
   preview: { select: { body: 'body' }, prepare: ({ body }) => ({ title: plain(body).slice(0, 80) || 'Box', subtitle: 'Highlighted box' }) },
 });
 
+/* A card shows only the fields its card design uses (the parent "Cards"
+   section records the design): find the card's group in the document. */
+type CardsDoc = { blocks?: { sections?: { content?: { _type?: string; design?: string; cards?: { _key?: string }[] }[] }[] }[] };
+function cardRoles(document: unknown, cardKey?: string): string[] | null {
+  for (const b of (document as CardsDoc)?.blocks ?? [])
+    for (const s of b.sections ?? [])
+      for (const it of s.content ?? [])
+        if (it._type === 'articleCards' && it.cards?.some((c) => c._key === cardKey)) {
+          try {
+            return (JSON.parse(it.design ?? '{}').parts ?? []).map((p: { role: string }) => p.role);
+          } catch {
+            return null;
+          }
+        }
+  return null;
+}
+const cardField = (field: ReturnType<typeof defineField>, role: string) => ({
+  ...field,
+  hidden: ({ document, parent }: { document?: unknown; parent?: { _key?: string } }) => {
+    const roles = cardRoles(document, parent?._key);
+    return roles ? !roles.includes(role) : false;
+  },
+});
+
 export const articleCard = defineType({
   name: 'articleCard',
   title: 'Card',
   type: 'object',
-  fields: [line('badge', 'Number / icon'), line('title', 'Title'), line('text', 'Text'), rich('body', 'Text (longer)')],
+  fields: [
+    cardField(line('badge', 'Number / icon'), 'badge'),
+    cardField(line('title', 'Title'), 'title'),
+    cardField(line('text', 'Text'), 'text'),
+    cardField(rich('body', 'Text'), 'body'),
+  ],
   preview: {
     select: { badge: 'badge', title: 'title', text: 'text', body: 'body' },
     prepare: ({ badge, title, text, body }) => ({ title: plain(title) || plain(text) || plain(body).slice(0, 60), subtitle: plain(badge) }),

@@ -372,17 +372,60 @@
 
   /* ======================================================================
      CONTACT FORM
-     NOTE: this preserves the old behaviour exactly - the submit is cancelled
-     and only an alert is shown, so the form never reaches contact-process.php.
-     That is a pre-existing bug, flagged rather than silently changed.
+     Sends the enquiry to /contact-process.php (saved in Sanity → Enquiries)
+     without leaving the page, with the page it came from and any ad
+     tracking parameters. The old site only showed an alert and never sent
+     anything.
      ====================================================================== */
 
-  var contactForm = $('.contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      window.alert('Appointment Request Submitted!');
+  var TRACKING = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid'];
+  // Remember the first ad parameters / landing page of the visit.
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    TRACKING.forEach(function (k) {
+      if (qs.get(k) && !sessionStorage.getItem('rv_' + k)) { sessionStorage.setItem('rv_' + k, qs.get(k)); }
     });
-  }
+    if (!sessionStorage.getItem('rv_landing_page')) { sessionStorage.setItem('rv_landing_page', window.location.pathname + window.location.search); }
+    if (!sessionStorage.getItem('rv_referrer')) { sessionStorage.setItem('rv_referrer', document.referrer || ''); }
+  } catch (err) { /* storage blocked: tracking is optional */ }
+
+  $$('form.contact-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var button = form.querySelector('[type="submit"], button:not([type])');
+      var data = new FormData(form);
+      data.append('source_page', window.location.pathname);
+      try {
+        TRACKING.concat(['landing_page', 'referrer']).forEach(function (k) {
+          var v = sessionStorage.getItem('rv_' + k);
+          if (v && !data.get(k)) { data.append(k, v); }
+        });
+      } catch (err) { /* ignore */ }
+
+      if (button) { button.disabled = true; }
+      fetch(form.getAttribute('action') || '/contact-process.php', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' }
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return { ok: res.ok, message: '' }; });
+        })
+        .then(function (r) {
+          if (r.ok) {
+            window.alert(r.message || 'Thank you! We will call you shortly.');
+            form.reset();
+          } else {
+            window.alert(r.message || 'Something went wrong. Please call us instead.');
+          }
+        })
+        .catch(function () {
+          window.alert('Could not send your request. Please check your connection or call us.');
+        })
+        .then(function () {
+          if (button) { button.disabled = false; }
+        });
+    });
+  });
 
 })();

@@ -11,6 +11,10 @@ import { getDoc, getRedirect, getSettings, toUrlPath } from '@/lib/content';
 // Rendered on every request from live Sanity content (no cache).
 export const dynamic = 'force-dynamic';
 
+/* The site script, versioned per deploy so browsers fetch a fixed copy
+   at once (/assets/*.js is cached for a year). */
+const SCRIPT_VERSION = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 8) ?? 'dev';
+
 export default async function SiteLayout({ children, params }: LayoutProps<'/[[...path]]'>) {
   const { path } = await params;
   const urlPath = toUrlPath(path);
@@ -34,6 +38,7 @@ export default async function SiteLayout({ children, params }: LayoutProps<'/[[.
         {children}
         <Footer s={settings} />
         <RawTags html={page.bodyEndHtml} />
+        <script src={`/assets/js/custom.js?v=${SCRIPT_VERSION}`} defer></script>
       </body>
     </html>
   );
