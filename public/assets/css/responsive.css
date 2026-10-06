@@ -1,0 +1,1945 @@
+/* =============================================================================
+   REVIVA - responsive.css
+   Every media query from every stylesheet, in the same order and with the same
+   .page-* scoping as style.css. Must load AFTER style.css.
+   ============================================================================= */
+
+/* ===== about.css  ->  .page-about ===== */
+
+@media(max-width:1200px){
+.page-about .story-container,
+.page-about .doctor-container{
+    grid-template-columns:1fr;
+  }
+.page-about .values-grid{
+    grid-template-columns:1fr;
+  }
+.page-about .doctor-image img{
+    height:620px;
+  }
+}
+@media(max-width:900px){
+.page-about .about-hero{
+    padding:90px 20px 110px;
+  }
+.page-about .hero-content h1{
+    font-size:62px;
+  }
+.page-about .story-section,
+.page-about .values-section,
+.page-about .doctor-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-about .story-content h2,
+.page-about .doctor-content h2,
+.page-about .infra-content h2{
+    font-size:52px;
+  }
+.page-about .doctor-info-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:600px){
+.page-about .hero-content h1{
+    font-size:42px;
+  }
+.page-about .hero-text{
+    font-size:15px;
+  }
+.page-about .story-content h2,
+.page-about .doctor-content h2,
+.page-about .infra-content h2{
+    font-size:42px;
+  }
+.page-about .story-image img{
+    height:420px;
+  }
+.page-about .doctor-image img{
+    height:460px;
+  }
+}
+@media(max-width:900px){
+.page-about .hamburger{
+        display:flex;
+    }
+.page-about nav{
+        width:100%;
+    }
+.page-about .nav-links.active{
+        display:flex !important;
+    }
+}
+@media(prefers-reduced-motion:reduce){
+.page-about .clinic-photo img{ transition:none; }
+.page-about .clinic-photo:hover img{ transform:none; }
+}
+@media(max-width:991px){
+.page-about .clinic-gallery{
+        padding:80px 30px;
+    }
+.page-about .clinic-gallery-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+.page-about .gallery-heading h2{
+        font-size:42px;
+    }
+}
+@media(max-width:600px){
+.page-about .clinic-gallery-grid{
+        grid-template-columns:1fr;
+    }
+.page-about .gallery-heading h2{
+        font-size:34px;
+    }
+}
+
+/* ===== acne.css  ->  .page-acne ===== */
+
+@media(max-width:1200px){
+.page-acne .footer-container{
+width:85%;
+}
+.page-acne .faq-container,
+.page-acne .procedure-container{
+width:80%;
+}
+}
+@media(max-width:900px){
+.page-acne .results-content h2{
+font-size:42px;
+}
+}
+@media(max-width:600px){
+.page-acne .procedure-container h2,
+.page-acne .faq-container h2{
+font-size:42px;
+}
+.page-acne .results-content h2{
+font-size:34px;
+}
+.page-acne .faq-container,
+.page-acne .procedure-container,
+.page-acne .footer-container{
+width:90%;
+}
+}
+
+/* ===== antiageing.css  ->  .page-antiageing ===== */
+
+@media(max-width:1200px){
+.page-antiageing .navbar,
+.page-antiageing .footer-container{
+        width:86%;
+    }
+.page-antiageing .procedure-container,
+.page-antiageing .faq-container{
+        width:82%;
+    }
+}
+@media(max-width:900px){
+.page-antiageing .results-content h2{
+        font-size:42px;
+    }
+}
+@media(max-width:600px){
+.page-antiageing .procedure-container h2,
+.page-antiageing .faq-container h2{
+        font-size:42px;
+    }
+.page-antiageing .results-content h2{
+        font-size:34px;
+    }
+.page-antiageing .consult-buttons{
+        flex-direction:column;
+    }
+.page-antiageing .faq-container,
+.page-antiageing .procedure-container,
+.page-antiageing .footer-container{
+        width:90%;
+    }
+}
+@media(max-width:900px){
+.page-antiageing .hamburger{
+        display:flex;
+    }
+.page-antiageing .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== blog1.css  ->  .page-blog1 ===== */
+
+@media(max-width:1250px){
+.page-blog1 .blog-container{
+        width:95%;
+    }
+}
+@media(max-width:992px){
+.page-blog1 .blog-container{
+        grid-template-columns:1fr;
+    }
+.page-blog1 .blog-left h1{
+        font-size:42px;
+    }
+}
+@media(max-width:768px){
+.page-blog1 .blog-page{
+        padding:30px 0 60px;
+    }
+.page-blog1 .blog-left h1{
+        font-size:42px;
+        line-height:1.2;
+    }
+.page-blog1 .blog-content h3{
+        font-size:28px;
+    }
+.page-blog1 .blog-content h4{
+        font-size:22px;
+    }
+}
+@media(max-width:600px){
+.page-blog1 .blog-left h1{
+        font-size:30px;
+    }
+.page-blog1 .blog-meta{
+        flex-direction:column;
+        gap:8px;
+    }
+.page-blog1 .blog-content p,
+.page-blog1 .blog-content ul li{
+        font-size:15px;
+    }
+.page-blog1 .blog-content h3{
+        font-size:22px;
+    }
+.page-blog1 .blog-content h4{
+        font-size:15px;
+    }
+}
+
+/* ===== blog12.css  ->  .page-blog12 ===== */
+
+@media (max-width:992px){
+.page-blog12 .main-wrapper{
+        grid-template-columns:1fr;
+        gap:55px;
+    }
+}
+@media (max-width:768px){
+.page-blog12 .main-wrapper{
+        margin:28px auto;
+    }
+.page-blog12 .blog-title{
+        font-size:36px;
+    }
+}
+@media (max-width:600px){
+.page-blog12 .blog-title{
+        font-size:28px;
+    }
+.page-blog12 .blog-meta{
+        flex-wrap:wrap;
+        gap:12px;
+    }
+}
+
+/* ===== blogs.css  ->  .page-blogs ===== */
+
+@media (prefers-reduced-motion:reduce){
+.page-blogs .blog-card__frame img,
+.page-blogs .blog-card h3,
+.page-blogs .blog-card__cta svg,
+.page-blogs .blog-more__btn{
+    transition:none;
+  }
+.page-blogs .blog-card:hover .blog-card__frame img{
+    transform:none;
+  }
+}
+@media(max-width:1200px){
+.page-blogs .blog-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(max-width:900px){
+.page-blogs .hero-content h1{
+    font-size:58px;
+  }
+.page-blogs .blog-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-blogs .blog-grid{
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+}
+@media(max-width:600px){
+.page-blogs .hero-content h1{
+    font-size:42px;
+  }
+.page-blogs .hero-text{
+    font-size:15px;
+  }
+.page-blogs .blog-card h3{
+    font-size:24px;
+  }
+.page-blogs .blog-more{
+    margin-top:44px;
+  }
+}
+@media (max-width:900px){
+.page-blogs .hamburger{
+        display:flex;
+    }
+.page-blogs nav{
+        position:absolute;
+        top:100%;
+        left:0;
+        width:100%;
+    }
+.page-blogs .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== butox.css  ->  .page-butox ===== */
+
+@media(max-width:900px){
+.page-butox .procedure-section,
+.page-butox .faq-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-butox .results-content h2,
+.page-butox .faq-container h2{
+    font-size:42px;
+  }
+}
+@media(max-width:600px){
+.page-butox .faq-question span{
+    font-size:17px;
+    line-height:1.5;
+  }
+.page-butox .results-content h2,
+.page-butox .faq-container h2{
+    font-size:34px;
+  }
+}
+@media(max-width:900px){
+.page-butox .hamburger{
+        display:flex;
+    }
+.page-butox .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== contact.css  ->  .page-contact ===== */
+
+@media(max-width:1200px){
+.page-contact .contact-container{
+    grid-template-columns:1fr;
+    gap:60px;
+  }
+}
+@media(max-width:900px){
+.page-contact .hero-content h1{
+    font-size:58px;
+  }
+.page-contact .contact-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-contact .form-row{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+}
+@media(max-width:600px){
+.page-contact .hero-content h1{
+    font-size:42px;
+  }
+.page-contact .hero-text{
+    font-size:15px;
+  }
+.page-contact .contact-form{
+    padding:28px 24px;
+  }
+.page-contact .contact-form-wrapper h2,
+.page-contact .contact-info h2{
+    font-size:42px;
+  }
+.page-contact .map-grid{
+    grid-template-columns:1fr;
+    margin-top:40px;
+  }
+}
+@media (max-width: 991px){
+.page-contact .contact-hero{
+    padding: 120px 20px 70px;
+    text-align: center;
+  }
+.page-contact .contact-hero h1{
+    font-size: 3rem;
+    line-height: 1.1;
+  }
+.page-contact .hero-text{
+    font-size: 15px;
+    max-width: 100%;
+  }
+.page-contact .contact-section{
+    padding:80px 80px;
+  }
+.page-contact .contact-container{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+.page-contact .contact-form-wrapper{
+    width: 100%;
+    padding: 30px 20px;
+  }
+.page-contact .contact-form-wrapper h2{
+    font-size:28px;
+  }
+.page-contact .form-row{
+    flex-direction: column;
+    gap: 20px;
+  }
+.page-contact .form-group{
+    width: 100%;
+  }
+.page-contact .contact-form input,
+.page-contact .contact-form textarea,
+.page-contact .contact-form select{
+    width: 100%;
+  }
+.page-contact .submit-btn{
+    width: 100%;
+  }
+.page-contact .contact-info{
+    width: 100%;
+  }
+.page-contact .info-box{
+    align-items: flex-start;
+  }
+.page-contact .info-box p{
+    font-size:15px;
+    line-height: 1.6;
+  }
+.page-contact .info-box small{
+    display: block;
+    margin-top: 8px;
+  }
+}
+@media (max-width: 576px){
+.page-contact .contact-hero h1{
+    font-size: 2.2rem;
+  }
+.page-contact .small-heading{
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
+.page-contact .contact-form-wrapper h2{
+    font-size:22px;
+  }
+.page-contact .info-box{
+    gap: 12px;
+  }
+.page-contact .icon{
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+}
+
+/* ===== gallery.css  ->  .page-gallery ===== */
+
+@media(max-width:1200px){
+.page-gallery .gallery-grid{
+    column-count:2;
+  }
+}
+@media(max-width:900px){
+.page-gallery .hero-content h1{
+    font-size:58px;
+  }
+.page-gallery .gallery-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+}
+@media(max-width:600px){
+.page-gallery .hero-content h1{
+    font-size:42px;
+  }
+.page-gallery .gallery-grid{
+    column-count:1;
+  }
+}
+
+/* ===== ghaziabad.css  ->  .page-ghaziabad ===== */
+
+@media(max-width:1200px){
+.page-ghaziabad .story-container,
+.page-ghaziabad .doctor-container{
+    grid-template-columns:1fr;
+  }
+.page-ghaziabad .values-grid{
+    grid-template-columns:1fr;
+  }
+.page-ghaziabad .doctor-image img{
+    height:620px;
+  }
+}
+@media(max-width:900px){
+.page-ghaziabad .about-hero{
+    padding:90px 20px 110px;
+  }
+.page-ghaziabad .hero-content h1{
+    font-size:62px;
+  }
+.page-ghaziabad .story-section,
+.page-ghaziabad .values-section,
+.page-ghaziabad .doctor-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-ghaziabad .story-content h2,
+.page-ghaziabad .doctor-content h2,
+.page-ghaziabad .infra-content h2{
+    font-size:52px;
+  }
+.page-ghaziabad .doctor-info-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:600px){
+.page-ghaziabad .hero-content h1{
+    font-size:42px;
+  }
+.page-ghaziabad .hero-text{
+    font-size:15px;
+  }
+.page-ghaziabad .story-content h2,
+.page-ghaziabad .doctor-content h2,
+.page-ghaziabad .infra-content h2{
+    font-size:42px;
+  }
+.page-ghaziabad .story-image img{
+    height:420px;
+  }
+.page-ghaziabad .doctor-image img{
+    height:460px;
+  }
+}
+@media(max-width:900px){
+.page-ghaziabad .hamburger{
+        display:flex;
+    }
+.page-ghaziabad nav{
+        width:100%;
+    }
+.page-ghaziabad .nav-links.active{
+        display:flex !important;
+    }
+}
+@media(max-width:991px){
+.page-ghaziabad .reviva-noida-wrapper{
+        flex-direction:column;
+    }
+.page-ghaziabad .reviva-noida-title{
+        font-size:48px;
+    }
+.page-ghaziabad .reviva-noida-image-box{
+        width:100%;
+    }
+}
+@media(max-width:576px){
+.page-ghaziabad .reviva-noida-title{
+        font-size:38px;
+    }
+.page-ghaziabad .reviva-noida-content p{
+        font-size:15px;
+    }
+}
+@media(max-width:991px){
+.page-ghaziabad .reviva-signature-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+.page-ghaziabad .reviva-signature-heading h2{
+        font-size:52px;
+    }
+}
+@media(max-width:768px){
+.page-ghaziabad .reviva-signature-grid{
+        grid-template-columns:1fr;
+    }
+.page-ghaziabad .reviva-signature-heading h2{
+        font-size:42px;
+    }
+.page-ghaziabad .reviva-signature-wrap{
+        padding:80px 80px;
+    }
+}
+@media(max-width:1200px){
+.page-ghaziabad .reviva-gallery-grid{
+        width:95%;
+    }
+}
+@media(max-width:768px){
+.page-ghaziabad .reviva-gallery-head h2{
+        font-size:44px;
+    }
+.page-ghaziabad .reviva-gallery-grid{
+        grid-template-columns:1fr;
+        grid-template-rows:auto;
+    }
+.page-ghaziabad .reviva-gallery-big{
+        grid-row:auto;
+        height:400px;
+    }
+.page-ghaziabad .reviva-gallery-side{
+        grid-row:auto;
+    }
+.page-ghaziabad .reviva-gallery-small{
+        height:250px;
+    }
+.page-ghaziabad .reviva-gallery-small-bottom{
+        height:250px;
+    }
+}
+
+/* ===== hair.css  ->  .page-hair ===== */
+
+@media(max-width:1200px){
+.page-hair .footer-container{
+        width:86%;
+    }
+.page-hair .faq-container,
+.page-hair .procedure-container{
+        width:82%;
+    }
+}
+@media(max-width:900px){
+.page-hair .results-content h2{
+        font-size:42px;
+    }
+}
+@media(max-width:600px){
+.page-hair .procedure-container h2,
+.page-hair .faq-container h2{
+        font-size:42px;
+    }
+.page-hair .results-content h2{
+        font-size:34px;
+    }
+.page-hair .consult-buttons{
+        flex-direction:column;
+    }
+.page-hair .faq-container,
+.page-hair .procedure-container,
+.page-hair .footer-container{
+        width:90%;
+    }
+}
+@media(max-width:900px){
+.page-hair .hamburger{
+        display:flex;
+    }
+.page-hair .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== index.css  ->  .page-index ===== */
+
+@media(prefers-reduced-motion:reduce){
+.page-index .journal-lead h3,
+.page-index .journal-item h3,
+.page-index .journal-lead__frame img,
+.page-index .journal-item__frame img,
+.page-index .journal-arrow,
+.page-index .section-more__btn,
+.page-index .section-more__btn svg{
+    transition:none;
+  }
+.page-index .journal-lead:hover .journal-lead__frame img,
+.page-index .journal-item:hover .journal-item__frame img{
+    transform:none;
+  }
+}
+@media(max-width:1200px){
+.page-index .hero-content h1{
+    font-size:72px;
+  }
+.page-index .about-container,
+.page-index .doctor-container{
+    grid-template-columns:1fr;
+  }
+.page-index .why-grid,
+.page-index .process-grid,
+.page-index .testimonial-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+.page-index .journal-lead{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
+.page-index .journal-lead__frame{
+    aspect-ratio:2/1;
+  }
+.page-index .journal-lead h3{
+    font-size:34px;
+  }
+.page-index .process-card:nth-child(2n)::after{
+    display:none;
+  }
+.page-index .process-grid{
+    row-gap:56px;
+  }
+.page-index .treatments-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(max-width:900px){
+.page-index .hero-content{
+    padding:110px 30px 70px;
+  }
+.page-index .hero-content h1{
+    font-size:52px;
+  }
+.page-index .hero-buttons{
+    flex-direction:row;
+    gap:12px;
+  }
+.page-index .hero-buttons .primary-btn,
+.page-index .hero-buttons .secondary-btn{
+    flex:1 1 0;
+    padding:16px 10px;
+    text-align:center;
+  }
+.page-index .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    width:100%;
+    border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.05);
+    border-radius:18px;
+    overflow:hidden;
+  }
+.page-index .hero-stats > div{
+    padding:20px 18px;
+    border-right:1px solid rgba(255,255,255,0.12);
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+.page-index .hero-stats > div:nth-child(2n){ border-right:0; }
+.page-index .hero-stats > div:nth-child(n+3){ border-bottom:0; }
+.page-index .feature-strip{
+    flex-direction:column;
+    gap:0;
+    padding:6px 26px;
+  }
+.page-index .feature-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 2px;
+    font-size:13.5px;
+    line-height:1.45;
+    border-bottom:1px solid rgba(217,177,114,0.14);
+  }
+.page-index .feature-item:last-child{
+    border-bottom:0;
+  }
+.page-index .feature-item::before{
+    content:"";
+    flex:0 0 auto;
+    width:6px;
+    height:6px;
+    background:#d7ae69;
+    transform:rotate(45deg);
+  }
+.page-index .about-section,
+.page-index .treatments-section,
+.page-index .doctor-section,
+.page-index .why-section,
+.page-index .process-section,
+.page-index .testimonial-section,
+.page-index .blog-section{
+    padding:80px 80px;
+  }
+.page-index .section-heading h2,
+.page-index .about-content h2,
+.page-index .doctor-content h2,
+.page-index .blog-top h2{
+    font-size:42px;
+  }
+.page-index .treatments-grid,
+.page-index .why-grid,
+.page-index .process-grid,
+.page-index .testimonial-grid,
+.page-index .journal-list{
+    grid-template-columns:1fr;
+  }
+.page-index .journal-list{
+    gap:34px;
+    margin-top:44px;
+    padding-top:44px;
+  }
+.page-index .process-card::after{
+    display:none;
+  }
+.page-index .process-card span{
+    height:60px;
+    font-size:46px;
+    margin-bottom:12px;
+  }
+.page-index .process-grid{
+    row-gap:44px;
+  }
+.page-index .section-more{
+    margin-top:50px;
+  }
+}
+@media(max-width:600px){
+.page-index .hero-content h1{
+    font-size:44px;
+  }
+.page-index .hero-text{
+    font-size:15px;
+  }
+.page-index .hero-stats > div{
+    padding:18px 14px;
+  }
+.page-index .hero-stats p{
+    font-size:12px;
+    letter-spacing:.6px;
+    line-height:1.5;
+  }
+.page-index .hero-stats h3{
+    font-size:28px;
+  }
+.page-index .about-content h2,
+.page-index .section-heading h2,
+.page-index .doctor-content h2,
+.page-index .blog-top h2{
+    font-size:42px;
+  }
+.page-index .journal-lead h3{
+    font-size:28px;
+  }
+.page-index .journal-item{
+    grid-template-columns:96px 1fr;
+    gap:18px;
+  }
+.page-index .journal-item h3{
+    font-size:22px;
+  }
+.page-index .doctor-image img{
+    height:420px;
+  }
+.page-index .about-image img{
+    height:450px;
+  }
+.page-index .card-overlay h3{
+    font-size:28px;
+  }
+.page-index .process-card::after{
+    display:none;
+  }
+}
+@media(max-width:900px){
+.page-index .hamburger{
+        display:flex;
+    }
+.page-index .nav-links.active{
+        display:flex !important;
+    }
+}
+@media(max-width:768px){
+.page-index .hero-contact-strip{
+    width:100%;
+    flex-direction:column;
+    gap:15px;
+    border-radius:20px;
+    padding:18px;
+    margin:25px 0 35px;
+  }
+.page-index .hero-contact-line{
+    width:100%;
+    height:1px;
+  }
+.page-index .hero-contact-item{
+    text-align:center;
+  }
+}
+@media(max-width:900px){
+.page-index .hamburger{
+      margin-top: -3rem;
+
+    }
+}
+
+/* ===== laser-hair-removal.css  ->  .page-laser-hair-removal ===== */
+
+@media(max-width:768px){
+.page-laser-hair-removal .reviva-faq-wrap{
+    padding:80px 25px;
+  }
+.page-laser-hair-removal .reviva-faq-title{
+    font-size:42px;
+  }
+.page-laser-hair-removal .reviva-faq-head span{
+    font-size:17px;
+  }
+}
+@media(max-width:1200px){
+.page-laser-hair-removal .procedure-steps{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(max-width:900px){
+.page-laser-hair-removal .procedure-section,
+.page-laser-hair-removal .results-section,
+.page-laser-hair-removal .faq-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-laser-hair-removal .results-content h2,
+.page-laser-hair-removal .faq-container h2{
+    font-size:42px;
+  }
+}
+@media(max-width:600px){
+.page-laser-hair-removal .overview-text h2,
+.page-laser-hair-removal .procedure-container h2{
+    font-size:42px;
+  }
+.page-laser-hair-removal .procedure-steps{
+    grid-template-columns:1fr;
+  }
+.page-laser-hair-removal .results-content h2,
+.page-laser-hair-removal .faq-container h2{
+    font-size:34px;
+  }
+.page-laser-hair-removal .faq-question span{
+    font-size:17px;
+    line-height:1.5;
+  }
+}
+@media(max-width:900px){
+.page-laser-hair-removal .hamburger{
+        display:flex;
+    }
+.page-laser-hair-removal .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== noida.css  ->  .page-noida ===== */
+
+@media(max-width:1200px){
+.page-noida .story-container,
+.page-noida .doctor-container{
+    grid-template-columns:1fr;
+  }
+.page-noida .values-grid{
+    grid-template-columns:1fr;
+  }
+.page-noida .doctor-image img{
+    height:620px;
+  }
+}
+@media(max-width:900px){
+.page-noida .about-hero{
+    padding:90px 20px 110px;
+  }
+.page-noida .hero-content h1{
+    font-size:62px;
+  }
+.page-noida .story-section,
+.page-noida .values-section,
+.page-noida .doctor-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-noida .story-content h2,
+.page-noida .doctor-content h2,
+.page-noida .infra-content h2{
+    font-size:52px;
+  }
+.page-noida .doctor-info-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:600px){
+.page-noida .hero-content h1{
+    font-size:42px;
+  }
+.page-noida .hero-text{
+    font-size:15px;
+  }
+.page-noida .story-content h2,
+.page-noida .doctor-content h2,
+.page-noida .infra-content h2{
+    font-size:42px;
+  }
+.page-noida .story-image img{
+    height:420px;
+  }
+.page-noida .doctor-image img{
+    height:460px;
+  }
+}
+@media(max-width:900px){
+.page-noida .hamburger{
+        display:flex;
+    }
+.page-noida nav{
+        width:100%;
+    }
+.page-noida .nav-links.active{
+        display:flex !important;
+    }
+}
+@media(max-width:991px){
+.page-noida .reviva-noida-wrapper{
+        flex-direction:column;
+    }
+.page-noida .reviva-noida-title{
+        font-size:48px;
+    }
+.page-noida .reviva-noida-image-box{
+        width:100%;
+    }
+}
+@media(max-width:576px){
+.page-noida .reviva-noida-title{
+        font-size:38px;
+    }
+.page-noida .reviva-noida-content p{
+        font-size:15px;
+    }
+}
+@media(max-width:991px){
+.page-noida .reviva-signature-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+.page-noida .reviva-signature-heading h2{
+        font-size:52px;
+    }
+}
+@media(max-width:768px){
+.page-noida .reviva-signature-grid{
+        grid-template-columns:1fr;
+    }
+.page-noida .reviva-signature-heading h2{
+        font-size:42px;
+    }
+.page-noida .reviva-signature-wrap{
+        padding:80px 80px;
+    }
+}
+@media(max-width:1200px){
+.page-noida .reviva-gallery-grid{
+        width:95%;
+    }
+}
+@media(max-width:768px){
+.page-noida .reviva-gallery-head h2{
+        font-size:44px;
+    }
+.page-noida .reviva-gallery-grid{
+        grid-template-columns:1fr;
+        grid-template-rows:auto;
+    }
+.page-noida .reviva-gallery-big{
+        grid-row:auto;
+        height:400px;
+    }
+.page-noida .reviva-gallery-side{
+        grid-row:auto;
+    }
+.page-noida .reviva-gallery-small{
+        height:250px;
+    }
+.page-noida .reviva-gallery-small-bottom{
+        height:250px;
+    }
+}
+
+/* ===== privacy.css  ->  .page-privacy ===== */
+
+@media(max-width:991px){
+.page-privacy .privacy-hero h1{
+        font-size:72px;
+    }
+.page-privacy .privacy-content{
+        max-width:100%;
+        margin-left:0;
+        padding:0 40px 70px;
+    }
+}
+@media(max-width:600px){
+.page-privacy .privacy-hero{
+        padding-top:40px;
+        padding-bottom:65px;
+    }
+.page-privacy .privacy-hero h1{
+        font-size:52px;
+    }
+.page-privacy .privacy-top-line h5{
+        font-size:12px;
+        letter-spacing:4px;
+    }
+.page-privacy .privacy-content{
+        padding:0 24px 60px;
+    }
+.page-privacy .policy-block h2{
+        font-size:22px;
+    }
+.page-privacy .policy-block p,
+.page-privacy .updated-text{
+        font-size:15px;
+        line-height:1.8;
+    }
+}
+@media(max-width:1200px){
+.page-privacy .story-container,
+.page-privacy .doctor-container{
+    grid-template-columns:1fr;
+  }
+.page-privacy .values-grid{
+    grid-template-columns:1fr;
+  }
+.page-privacy .doctor-image img{
+    height:620px;
+  }
+}
+@media(max-width:900px){
+.page-privacy .about-hero{
+    padding:90px 20px 110px;
+  }
+.page-privacy .hero-content h1{
+    font-size:62px;
+  }
+.page-privacy .story-section,
+.page-privacy .values-section,
+.page-privacy .doctor-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-privacy .story-content h2,
+.page-privacy .doctor-content h2,
+.page-privacy .infra-content h2{
+    font-size:52px;
+  }
+.page-privacy .doctor-info-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:600px){
+.page-privacy .hero-content h1{
+    font-size:42px;
+  }
+.page-privacy .hero-text{
+    font-size:15px;
+  }
+.page-privacy .story-content h2,
+.page-privacy .doctor-content h2,
+.page-privacy .infra-content h2{
+    font-size:42px;
+  }
+.page-privacy .story-image img{
+    height:420px;
+  }
+.page-privacy .doctor-image img{
+    height:460px;
+  }
+}
+@media(max-width:900px){
+.page-privacy .hamburger{
+        display:flex;
+    }
+.page-privacy .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== reviews.css  ->  .page-reviews ===== */
+
+@media(max-width:1200px){
+.page-reviews .reviews-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(max-width:900px){
+.page-reviews .hero-content h1{
+    font-size:58px;
+  }
+.page-reviews .reviews-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-reviews .reviews-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:600px){
+.page-reviews .hero-content h1{
+    font-size:42px;
+  }
+.page-reviews .hero-text{
+    font-size:15px;
+  }
+.page-reviews .review-card{
+    padding:26px;
+  }
+.page-reviews .review-text{
+    min-height:auto;
+  }
+}
+
+/* ===== sitemap.css  ->  .page-sitemap ===== */
+
+@media(max-width:768px){
+.page-sitemap h1{
+        font-size:38px;
+      }
+.page-sitemap .sitemap-section h2{
+        font-size:22px;
+      }
+.page-sitemap .sitemap-links a{
+        font-size:15px;
+        padding:14px 16px;
+      }
+}
+
+/* ===== skin.css  ->  .page-skin ===== */
+
+@media(max-width:850px){
+.page-skin .navbar.show{
+        right:0;
+    }
+.page-skin .hamburger{
+        display:flex;
+    }
+.page-skin .phone{
+        display:none;
+    }
+.page-skin .overview-content{
+        margin-left:0;
+    }
+}
+@media(max-width:600px){
+.page-skin .container{
+        padding:0 20px;
+    }
+.page-skin .overview-content h2,
+.page-skin .section-title,
+.page-skin .faq-title{
+        font-size:42px;
+    }
+.page-skin .results-content h2{
+        font-size:42px;
+    }
+}
+@media(max-width:900px){
+.page-skin .hamburger{
+        display:flex;
+        margin-top: -2rem;
+    }
+.page-skin .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== treatment.css  ->  .page-treatment ===== */
+
+@media(max-width:1200px){
+.page-treatment .treatments-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:900px){
+.page-treatment .hero-content h1{
+    font-size:58px;
+  }
+.page-treatment .treatments-section{
+    padding-left:30px;
+    padding-right:30px;
+  }
+.page-treatment .treatment-card{
+    grid-template-columns:1fr;
+  }
+.page-treatment .card-image img{
+    height:320px;
+  }
+}
+@media(max-width:600px){
+.page-treatment .hero-content h1{
+    font-size:42px;
+  }
+.page-treatment .hero-text{
+    font-size:15px;
+  }
+.page-treatment .card-content{
+    padding:32px 24px;
+  }
+.page-treatment .card-content h3{
+    font-size:28px;
+  }
+}
+
+/* ===== underarm.css  ->  .page-underarm ===== */
+
+@media(max-width:1200px){
+.page-underarm .navbar,
+.page-underarm .procedure-container,
+.page-underarm .faq-container{
+        width:82%;
+    }
+.page-underarm .footer-container,
+.page-underarm .footer-bottom{
+        width:86%;
+    }
+}
+@media(max-width:900px){
+.page-underarm .consult-buttons{
+        flex-direction:column;
+    }
+}
+@media(max-width:600px){
+.page-underarm .procedure-container,
+.page-underarm .faq-container,
+.page-underarm .footer-container,
+.page-underarm .footer-bottom{
+        width:90%;
+    }
+.page-underarm .procedure-container h2,
+.page-underarm .faq-container h2{
+        font-size:42px;
+    }
+.page-underarm .results-content h2{
+        font-size:42px;
+    }
+}
+@media(max-width:900px){
+.page-underarm .hamburger{
+        display:flex;
+    }
+.page-underarm .nav-links.active{
+        display:flex;
+    }
+}
+
+/* ===== site-header.css (global, unscoped) ===== */
+
+@media (min-width:1080px){
+  .rv-toggle{ display:none; }
+  .rv-call__label{ display:inline; }
+}
+@media (max-width:1079px){
+
+  .rv-header{ top:12px; }
+
+   
+  .rv-header__bar{
+    --rv-bar-h:64px;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+    background:var(--rv-surface-solid);
+  }
+
+  .rv-nav{
+    position:fixed;
+
+     
+    top:76px;
+    right:0;
+    bottom:0;
+    width:min(420px,90vw);
+    padding:18px 22px 40px;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+
+    background:#191210;
+    border-left:1px solid var(--rv-hairline);
+    box-shadow:-24px 0 60px rgba(0,0,0,.5);
+
+    transform:translateX(100%);
+    visibility:hidden;
+    transition:transform 300ms var(--rv-ease), visibility 300ms;
+    z-index:999;
+  }
+
+  .rv-nav.is-open{
+    transform:translateX(0);
+    visibility:visible;
+  }
+
+  .rv-nav__list{
+    display:block;
+    gap:0;
+  }
+
+  .rv-nav__item{
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+
+  .rv-nav__link{
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+    height:auto;
+    min-height:52px;
+    padding:14px 4px;
+    border-radius:0;
+    font-size:15.5px;
+  }
+
+  .rv-nav__link:hover,
+  .rv-nav__link[aria-expanded="true"]{ background:transparent; }
+
+  .rv-nav__link[aria-current="page"]::after{ display:none; }
+
+   
+  .rv-panel{
+    position:static;
+    width:auto;
+    padding:0 0 12px 10px;
+    margin-left:4px;
+
+    background:transparent;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+    border:0;
+    border-left:1px solid rgba(217,177,114,.22);
+    border-radius:0;
+    box-shadow:none;
+
+    transform:none;
+    display:none;
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transition:none;
+  }
+
+  .rv-nav__item.is-open .rv-panel{
+    display:block;
+    transform:none;
+  }
+
+  .rv-panel::before{ display:none; }
+
+  .rv-panel__grid{
+    display:block;
+  }
+
+  .rv-panel__col{
+    margin:0 0 6px;
+  }
+
+  .rv-panel__col--feature{
+    padding:0;
+    margin:0 0 6px;
+    background:none;
+    border:0;
+    border-radius:0;
+  }
+
+  .rv-panel__col--feature p{ display:none; }
+
+  .rv-panel__col > h3{
+    margin:14px 0 4px;
+    padding:0;
+    border:0;
+    font-size:11.5px;
+    letter-spacing:1.6px;
+  }
+
+  .rv-panel__col a{
+    padding:11px 12px;
+    margin-left:0;
+    font-size:14px;
+  }
+
+  .rv-caret{ width:12px; height:12px; }
+}
+@media (max-width:560px){
+  .rv-header{
+    top:10px;
+    width:calc(100% - 20px);
+  }
+  .rv-header__bar{
+    --rv-bar-h:60px;
+    padding:0 10px;
+    gap:6px;
+  }
+   
+  .rv-nav{ top:70px; }
+  .rv-brand img{ height:34px; }
+  .rv-header.is-scrolled .rv-brand img{ height:32px; }
+  .rv-call{
+    padding:0 12px;
+    min-width:44px;
+  }
+  .rv-cta{
+    padding:0 14px;
+    font-size:11.5px;
+    letter-spacing:.5px;
+  }
+  .rv-cta__full{ display:none; }
+  .rv-cta__short{ display:inline; }
+}
+@media (prefers-reduced-motion:reduce){
+  .rv-header,
+  .rv-header *,
+  .rv-scrim{
+    transition-duration:1ms !important;
+    animation-duration:1ms !important;
+  }
+}
+@media (prefers-contrast:more){
+  .rv-header{
+    --rv-surface:rgba(20,14,10,.97);
+    --rv-hairline:rgba(217,177,114,.55);
+    --rv-muted:#E6DCD0;
+  }
+}
+@media (max-width:1079px){
+  body.rv-offset{ padding-top:88px; }
+}
+@media (max-width:560px){
+  body.rv-offset{ padding-top:78px; }
+}
+
+/* ===== site-footer.css (global, unscoped) ===== */
+
+@media (max-width:1080px){
+  .rv-footer__grid{
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  .rv-footer__brand{ grid-column:1 / -1; }
+}
+@media (max-width:640px){
+  .rv-footer{
+    padding-top:56px;
+  }
+  .rv-footer__grid{
+    grid-template-columns:1fr;
+    gap:34px;
+    padding-bottom:40px;
+  }
+  .rv-footer__blurb{ max-width:none; }
+  .rv-footer__bottom{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .rv-footer__legal{ gap:4px 18px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .rv-footer *{
+    transition-duration:1ms !important;
+  }
+}
+@media (prefers-contrast:more){
+  .rv-footer{
+    --rv-muted:#DCD2C6;
+    --rv-hairline:rgba(217,177,114,.5);
+  }
+}
+
+/* ===== blog-sidebar.css (global, unscoped) ===== */
+
+@media (max-width:992px){
+
+  .rv-bs{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:20px;
+  }
+
+  .rv-bs-search{
+    grid-column:1 / -1;
+  }
+
+}
+@media (max-width:640px){
+
+  .rv-bs{
+    display:flex;
+  }
+
+  .rv-bs-card{
+    padding:20px 18px 22px;
+  }
+
+  .rv-bs-cta{
+    padding:24px 20px 26px;
+  }
+
+}
+@media (prefers-reduced-motion:reduce){
+
+  .rv-bs-post__frame img,
+  .rv-bs-more svg,
+  .rv-bs-cta__btn,
+  .rv-bs-links a,
+  .rv-bs-search__btn{
+    transition:none;
+  }
+
+}
+
+/* ===== _components.css (global, unscoped) ===== */
+
+@media (max-width:600px){
+  .results-btn{
+    padding:14px 24px;
+  }
+
+  .filter-buttons a,
+  .filter-btn{
+    padding:11px 16px;
+    letter-spacing:1.2px;
+  }
+}
+@media (max-width:600px){
+  .whatsapp-btn{
+    right:16px;
+    bottom:16px;
+    width:54px;
+    height:54px;
+  }
+
+  .whatsapp-btn img{
+    width:36px;
+    height:36px;
+  }
+}
+@media(max-width:1079px){
+  [class*="page-"] .about-hero,
+  [class*="page-"] .blog-hero,
+  [class*="page-"] .contact-hero,
+  [class*="page-"] .gallery-hero,
+  [class*="page-"] .reviews-hero,
+  [class*="page-"] .treatments-hero{
+    padding-top:116px;
+    padding-bottom:40px;
+  }
+}
+
+/* ===== _rhythm.css (global, unscoped) ===== */
+
+@media (max-width:900px){
+
+   
+  [class*="page-"] [class*="-container"],
+  [class*="page-"] [class*="-grid"],
+  [class*="page-"] [class*="-wrapper"]{
+    gap:var(--sp-6);
+  }
+
+   
+  [class*="page-"] [class]:not([class*="rv-"]) h1{ margin-bottom:var(--sp-4); }
+  [class*="page-"] [class]:not([class*="rv-"]) h2{ margin-bottom:var(--sp-3); }
+}
+
+/* ===== _rhythm-sections.css (global, unscoped) ===== */
+
+@media (max-width:900px){
+
+   
+  .page-about .about-hero{ padding:56px 20px 56px; }
+  .page-about .story-section{ padding:40px 24px 40px; }
+  .page-about .values-section{ padding:40px 24px; }
+  .page-about .doctor-section{ padding:40px 24px; }
+  .page-about .infrastructure-section{ padding:40px 24px; }
+  .page-about .cta-section{ padding:40px 24px; }
+  .page-about .story-section{ padding:40px 24px; }
+  .page-about .doctor-section{ padding:40px 24px; }
+
+   
+  .page-acne .overview-section{ padding:40px 24px 40px; }
+  .page-acne .benefits-section{ padding:40px 24px 40px; }
+  .page-acne .procedure-section{ padding:40px 24px; }
+  .page-acne .results-strip{ padding:40px 24px; }
+  .page-acne .faq-section{ padding:40px 24px; }
+  .page-acne .cta-section{ padding:40px 24px 40px; }
+
+   
+  .page-antiageing .overview-section{ padding:40px 24px 40px; }
+  .page-antiageing .benefits-section{ padding:40px 24px 40px; }
+  .page-antiageing .procedure-section{ padding:40px 24px; }
+  .page-antiageing .results-section{ padding:40px 24px; }
+  .page-antiageing .faq-section{ padding:40px 24px; }
+  .page-antiageing .consultation-section{ padding:0 24px 40px; }
+
+   
+  .page-blogs .blog-hero{ padding:56px 20px 56px; }
+  .page-blogs .blog-section{ padding:0 24px 40px; }
+
+   
+  .page-butox .overview-section{ padding:40px 24px; }
+  .page-butox .benefits-section{ padding:0 24px 40px; }
+  .page-butox .procedure-section{ padding:40px 24px; }
+  .page-butox .results-section{ padding:40px 24px; }
+  .page-butox .faq-section{ padding:40px 24px; }
+  .page-butox .cta-section{ padding:0 24px 40px; }
+
+   
+  .page-contact .contact-hero{ padding:56px 20px 56px; }
+  .page-contact .contact-section{ padding:0 24px 40px; }
+
+   
+  .page-gallery .gallery-hero{ padding:56px 20px 40px; }
+  .page-gallery .filter-section{ padding:0 24px 40px; }
+  .page-gallery .gallery-section{ padding:0 24px 40px; }
+  .page-gallery .cta-section{ padding:40px 24px; }
+
+   
+  .page-ghaziabad .about-hero{ padding:56px 20px 56px; }
+  .page-ghaziabad .story-section{ padding:40px 24px 40px; }
+  .page-ghaziabad .values-section{ padding:40px 24px; }
+  .page-ghaziabad .doctor-section{ padding:40px 24px; }
+  .page-ghaziabad .infrastructure-section{ padding:40px 24px; }
+  .page-ghaziabad .cta-section{ padding:40px 24px; }
+
+   
+  .page-hair .overview-section{ padding:40px 24px 40px; }
+  .page-hair .benefits-section{ padding:40px 24px 40px; }
+  .page-hair .procedure-section{ padding:40px 24px; }
+  .page-hair .results-strip{ padding:40px 24px; }
+  .page-hair .faq-section{ padding:40px 24px; }
+  .page-hair .consultation-section{ padding:0 24px 40px; }
+
+   
+  .page-index .feature-strip{ padding:8px 24px; }
+  .page-index .about-section{ padding:40px 24px; }
+  .page-index .treatments-section{ padding:40px 24px; }
+  .page-index .doctor-section{ padding:40px 24px; }
+  .page-index .why-section{ padding:40px 24px; }
+  .page-index .process-section{ padding:40px 24px; }
+  .page-index .testimonial-section{ padding:40px 24px; }
+  .page-index .cta-section{ padding:40px 24px; }
+  .page-index .blog-section{ padding:40px 24px; }
+  .page-index .hero-contact-strip{ padding:8px 24px; }
+
+   
+  .page-laser-hair-removal .overview-section{ padding:40px 24px 40px; }
+  .page-laser-hair-removal .benefits-section{ padding:40px 24px 40px; }
+  .page-laser-hair-removal .procedure-section{ padding:0 24px 40px; }
+  .page-laser-hair-removal .results-section{ padding:40px 24px; }
+  .page-laser-hair-removal .faq-section{ padding:40px 24px; }
+  .page-laser-hair-removal .cta-section{ padding:0 24px 40px; }
+
+   
+  .page-noida .about-hero{ padding:56px 20px 56px; }
+  .page-noida .story-section{ padding:40px 24px 40px; }
+  .page-noida .values-section{ padding:40px 24px; }
+  .page-noida .doctor-section{ padding:40px 24px; }
+  .page-noida .infrastructure-section{ padding:40px 24px; }
+  .page-noida .cta-section{ padding:40px 24px; }
+
+   
+  .page-preview .demo-section{ padding:40px 24px; }
+
+   
+  .page-privacy .cta-section{ padding:40px 24px; }
+
+   
+  .page-reviews .reviews-hero{ padding:56px 20px 56px; }
+  .page-reviews .reviews-section{ padding:0 24px 40px; }
+  .page-reviews .cta-section{ padding:40px 24px; }
+
+   
+  .page-skin .overview-section{ padding:40px 24px 40px; }
+  .page-skin .benefits-section{ padding:40px 24px 40px; }
+  .page-skin .procedure-section{ padding:40px 24px; }
+  .page-skin .results-section{ padding:40px 24px; }
+  .page-skin .faq-section{ padding:40px 24px; }
+  .page-skin .cta-section{ padding:40px 24px 40px; }
+
+   
+  .page-treatment .treatments-hero{ padding:56px 20px 56px; }
+  .page-treatment .treatments-section{ padding:0 24px 40px; }
+  .page-treatment .cta-section{ padding:40px 24px; }
+
+   
+  .page-underarm .overview-section{ padding:40px 24px 40px; }
+  .page-underarm .benefits-section{ padding:40px 24px 40px; }
+  .page-underarm .procedure-section{ padding:40px 24px; }
+  .page-underarm .results-section{ padding:40px 24px; }
+  .page-underarm .faq-section{ padding:40px 24px; }
+  .page-underarm .consultation-section{ padding:40px 24px 40px; }
+}
+
+/* ===== _section-seams.css (global, unscoped) ===== */
+
+@media (max-width:900px){
+  .page-about .clinic-gallery{ padding-top:0; }
+  .page-laser-hair-removal .overview-section{ padding-top:0; }
+  .page-laser-hair-removal .benefits-section{ padding-top:0; }
+  .page-laser-hair-removal .procedure-section{ padding-top:0; }
+  .page-skin .overview-section{ padding-top:0; }
+  .page-skin .benefits-section{ padding-top:0; }
+  .page-acne .overview-section{ padding-top:0; }
+  .page-acne .cta-section{ padding-top:0; }
+  .page-gallery .filter-section{ padding-top:0; }
+  .page-gallery .gallery-section{ padding-top:0; }
+  .page-gallery .cta-section{ padding-top:0; }
+  .page-hair .overview-section{ padding-top:0; }
+  .page-hair .benefits-section{ padding-top:0; }
+  .page-antiageing .overview-section{ padding-top:0; }
+  .page-antiageing .benefits-section{ padding-top:0; }
+  .page-blogs .blog-section{ padding-top:0; }
+  .page-butox .overview-section{ padding-top:0; }
+  .page-butox .benefits-section{ padding-top:0; }
+  .page-contact .contact-section{ padding-top:0; }
+  .page-privacy .privacy-content{ padding-top:0; }
+  .page-privacy .cta-section{ padding-top:0; }
+  .page-hair .consultation-section{ padding-top:0; }
+  .page-preview .demo-section{ padding-top:0; }
+  .page-index .cta-section{ padding-top:0; }
+  .page-index .blog-section{ padding-top:0; }
+  .page-laser-hair-removal .cta-section{ padding-top:0; }
+  .page-noida .reviva-signature-wrap{ padding-top:0; }
+  .page-reviews .reviews-section{ padding-top:0; }
+  .page-reviews .cta-section{ padding-top:0; }
+  .page-skin .cta-section{ padding-top:0; }
+  .page-treatment .treatments-section{ padding-top:0; }
+  .page-treatment .cta-section{ padding-top:0; }
+  .page-underarm .overview-section{ padding-top:0; }
+  .page-underarm .benefits-section{ padding-top:0; }
+}
+
+/* ===== service-hero.css (global, unscoped) ===== */
+
+@media (max-width:1079px){
+
+   
+  .rv-shero{
+    padding-top:clamp(96px, 12vw, 116px);
+  }
+
+}
+@media (max-width:760px){
+
+  .rv-shero{
+    min-height:320px;
+    padding-bottom:30px;
+  }
+
+   
+  .rv-shero{
+    background-position:center 38%;
+  }
+
+  .rv-shero__title{
+    max-width:20ch;
+  }
+
+  .rv-shero__text{
+    font-size:15px;
+    line-height:1.6;
+  }
+
+}
+@media (max-width:560px){
+
+  .rv-shero{
+    min-height:300px;
+    padding-top:96px;
+  }
+
+  .rv-shero__eyebrow{
+    margin-bottom:12px;
+    letter-spacing:.22em;
+  }
+
+}
+
+/* ===== service-cta.css (global, unscoped) ===== */
+
+@media (max-width:620px){
+
+   
+  .rv-endcta__actions{
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
+
+  .rv-endcta__btn{
+    width:100%;
+    max-width:340px;
+    padding:16px 20px;
+    letter-spacing:1.1px;
+  }
+
+  .rv-endcta__text{
+    margin-top:16px;
+  }
+
+}
+@media (prefers-reduced-motion:reduce){
+  .rv-endcta__btn,
+  .rv-endcta__btn svg{
+    transition:none;
+  }
+  .rv-endcta__btn:hover svg{
+    transform:none;
+  }
+}
+
+/* ===== service-content.css (global, unscoped) ===== */
+
+@media (max-width:860px){
+
+   
+  .rv-svc__cols{
+    grid-template-columns:1fr;
+  }
+
+  .rv-svc__col + .rv-svc__col{
+    padding-left:0;
+    padding-top:clamp(26px, 5vw, 36px);
+    border-left:0;
+    border-top:1px solid rgba(45,36,31,.10);
+  }
+
+}
+
+/* ===== post-end.css (global, unscoped) ===== */
+
+@media (max-width:560px){
+
+  .rv-pe .rv-pe-nav{
+    grid-template-columns:1fr;
+  }
+
+  .rv-pe .rv-pe-nav__link--next{
+    grid-column:auto;
+  }
+
+}
+@media (prefers-reduced-motion:reduce){
+  .rv-pe .rv-pe-line,
+  .rv-pe .rv-pe-line__icon,
+  .rv-pe .rv-pe-nav__link,
+  .rv-pe .rv-pe-nav__label svg,
+  .rv-pe .rv-pe-cta__alt a{
+    transition:none;
+  }
+  .rv-pe .rv-pe-nav__link:hover .rv-pe-nav__label svg{
+    transform:none;
+  }
+}

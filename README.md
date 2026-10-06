@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Reviva Skin & Surgery — Next.js + Sanity
 
-## Getting Started
+The revivaskinandsurgery.com site, moved from static HTML/PHP to **Next.js** with
+**Sanity** as the CMS. The design is unchanged: same CSS, JS, images and markup,
+and the same URLs (`/acne-treatment.html`, `/blog/….html`). All 158 pages were
+checked against the old site and render identically.
 
-First, run the development server:
+## How it fits together
+
+| Part | Where |
+|---|---|
+| Pages (all 158, incl. 84 blog posts) | Sanity → **Pages** / **Blog posts**, rendered by `app/[[...path]]` |
+| Header + footer (menu, phones, addresses, hours, links) | Sanity → **Site Settings**, `components/Header.tsx`, `components/Footer.tsx` |
+| CSS / JS / images | `public/assets` (unchanged from the old site) |
+| Landing pages | `public/lp/*` → `/lp/skin-clinic-in-noida`, `/lp/skin-care-clinic-in-noida` |
+| 170 old-URL 301 redirects | `content/redirects.json` (from the old `.htaccess`) |
+| Contact form endpoint | `app/contact-process.php/route.ts` → saves **Enquiries** in Sanity |
+| CMS (replaces `/admin`) | `/studio` |
+
+Until Sanity is configured the site serves the snapshot in `content/pages`, so it
+works on Vercel straight away.
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000, Studio at /studio
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Connect Sanity (one-time)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. `npx sanity login`, then `npx sanity init --env .env.local` (choose "Create new project",
+   dataset `production`), or create a project at sanity.io/manage and copy `.env.example`
+   to `.env.local` and fill it in.
+2. In sanity.io/manage → **API**:
+   - **CORS origins**: add `http://localhost:3000` and your live domain (allow credentials).
+   - **Tokens**: create an *Editor* token → `SANITY_API_WRITE_TOKEN`.
+3. Load the site into Sanity: `npm run sanity:import`
+4. **Webhook** (instant updates on publish): URL `https://<domain>/api/revalidate`,
+   trigger on create/update/delete, secret = `SANITY_REVALIDATE_SECRET`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy (GitHub → Vercel)
 
-## Learn More
+1. Push this folder to a GitHub repo.
+2. vercel.com → **Add New Project** → import the repo (framework: Next.js, defaults are fine).
+3. Add the variables from `.env.example` under **Settings → Environment Variables**.
+4. Every push to `main` deploys automatically.
 
-To learn more about Next.js, take a look at the following resources:
+## Editing content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Text, images, links on a page:** Studio → Pages / Blog posts → open the page → *Page content (HTML)*.
+- **Title / description:** same document, *SEO* tab.
+- **Menu, phone numbers, addresses, footer links:** Studio → Site Settings.
+- **New page:** create a Page, set the URL path (e.g. `/new-treatment.html`), paste HTML using the site's existing classes.
+- **Images:** add files under `public/assets/images` and reference them as `/assets/images/<file>`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Before go-live
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `public/robots.txt` currently blocks all crawlers (`Disallow: /`), as on the old
+  staging copy. Change it to allow indexing when switching the domain over.
+- The contact form's submit is still intercepted by `custom.js` (it only shows an alert —
+  pre-existing behaviour). Remove that handler to start receiving enquiries in Sanity.

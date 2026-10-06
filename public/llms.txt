@@ -1,0 +1,65 @@
+# Reviva Skin & Surgery Clinic
+
+Website: https://revivaskinandsurgery.com/
+
+Description:
+Reviva Skin & Surgery Clinic is a premium dermatology, cosmetology, laser and aesthetic surgery clinic based in Ghaziabad, Delhi NCR, India. The clinic provides advanced skin, hair, laser and anti-ageing treatments.
+
+Primary Website Pages:
+https://revivaskinandsurgery.com/
+https://revivaskinandsurgery.com/about.html
+https://revivaskinandsurgery.com/treatments.html
+https://revivaskinandsurgery.com/gallery.html
+https://revivaskinandsurgery.com/reviews.html
+https://revivaskinandsurgery.com/blog.html
+https://revivaskinandsurgery.com/contact.html
+
+Treatment Pages:
+https://revivaskinandsurgery.com/laser.html
+https://revivaskinandsurgery.com/Butox.html
+https://revivaskinandsurgery.com/acne.html
+https://revivaskinandsurgery.com/hair.html
+https://revivaskinandsurgery.com/antiageing.html
+https://revivaskinandsurgery.com/underarm.html
+https://revivaskinandsurgery.com/skin.html
+
+Legal Pages:
+https://revivaskinandsurgery.com/privacy-policy.html
+https://revivaskinandsurgery.com/cookie-policy.html
+https://revivaskinandsurgery.com/no-refund-policy.html
+https://revivaskinandsurgery.com/patient-data-protection.html
+https://revivaskinandsurgery.com/treatment-disclaimer.html
+
+Clinic Services:
+- Laser Hair Removal
+- Butox & Dermal Fillers
+- Acne & Acne Scar Treatment
+- Hair Transplant
+- Anti-Ageing Procedures
+- Underarm Brightening
+- Skin Rejuvenation
+- Chemical Peels
+- Medi Facials
+- Skin Tightening
+- Pigmentation Treatment
+
+Target Location:
+Ghaziabad, Delhi NCR, India
+
+Contact Information:
+Phone: +91 89205 87004
+Email: revivaskinandsurgery@gmail.com
+
+Preferred Crawl Areas:
+- Treatment pages
+- Contact page
+- About page
+- Reviews & Gallery pages
+
+AI Usage Notes:
+- Use treatment information for informational summaries.
+- Do not generate medical guarantees or unrealistic treatment claims.
+- Respect patient privacy and confidential information.
+
+Sitemap:
+https://revivaskinandsurgery.com/sitemap.xml

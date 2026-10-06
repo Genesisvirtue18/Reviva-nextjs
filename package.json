@@ -6,12 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "extract": "node scripts/extract-html.mjs ../public_html",
+    "sanity:import": "node --env-file=.env.local scripts/import-to-sanity.mjs"
   },
   "dependencies": {
+    "@sanity/client": "^8.9.0",
+    "@sanity/code-input": "^7.3.9",
+    "@sanity/icons": "^5.2.3",
+    "@sanity/vision": "^6.17.0",
+    "cheerio": "^1.2.0",
     "next": "16.3.8",
+    "next-sanity": "^13.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sanity": "^6.17.0",
+    "server-only": "^0.0.1",
+    "styled-components": "^6.5.3"
   },
   "devDependencies": {
     "@types/node": "^20",
