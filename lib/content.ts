@@ -2,8 +2,7 @@ import 'server-only';
 import { cache } from 'react';
 import { defineQuery } from 'next-sanity';
 import { client } from './sanity';
-import { renderFields } from './render-fields';
-import type { DocMeta, Page, PageSection, SiteSettings } from './types';
+import type { DocMeta, Page, SiteSettings } from './types';
 import type { Post, PostCard } from '@/components/blog';
 
 /* All content comes from Sanity (there is no offline copy), read fresh on
@@ -22,7 +21,7 @@ const CARDS_QUERY = defineQuery(`*[_type == "post" && defined(slug.current) && d
 const PATHS_QUERY = defineQuery(`[...*[_type == "page" && defined(path)].path, ...*[_type == "post" && defined(slug.current)]{"p": "/blog/" + slug.current}.p]`);
 const REDIRECT_QUERY = defineQuery(`*[_type == "redirect" && source in $paths][0].destination`);
 const SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{..., "logoImageUrl": logoImage.asset->url}`);
-const LANDING_QUERY = defineQuery(`*[_type == "landingPage" && slug.current == $slug][0]{"html": html.code, "templateHtml": templateHtml.code, sections}`);
+const LANDING_QUERY = defineQuery(`*[_type == "landingPage" && slug.current == $slug][0]{ title, seoTitle, metaDescription, gtmId, design, sections }`);
 
 /* Sections store which markup variant they use as a hidden JSON string
    ("design"); turn those back into objects for the components. */
@@ -112,10 +111,8 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
   return out as SiteSettings;
 });
 
-/** Full HTML of an /lp/ landing page. */
-export async function getLandingHtml(slug: string): Promise<string | null> {
-  const lp = await client.fetch<{ html?: string; templateHtml?: string; sections?: PageSection[] } | null>(LANDING_QUERY, { slug }, FETCH_OPTS);
-  if (!lp) return null;
-  return lp.templateHtml ? renderFields(lp.templateHtml, lp.sections) : (lp.html ?? null);
-}
+export type Landing = { title: string; seoTitle?: string; metaDescription?: string; gtmId?: string; design?: 'care' | 'clinic'; sections?: { _type: string; _key: string }[] };
+
+/** An ad landing page (/lp/<slug>). */
+export const getLanding = cache(async (slug: string) => client.fetch<Landing | null>(LANDING_QUERY, { slug }, FETCH_OPTS));
 

@@ -75,22 +75,3 @@ export type Page = DocMeta & {
   blocks?: { _type: string; _key: string; [k: string]: unknown }[];
   whatsapp?: boolean;
 };
-
-/* Editable page fields (see scripts/lib/html-fields.mjs). */
-export type PortableSpan = { _type: 'span'; _key: string; text: string; marks?: string[] };
-export type PortableInline = { _type: 'inlineHtml'; _key: string; html: string };
-export type MarkDef = { _key: string; _type: 'link' | 'styled'; href?: string; tag?: string; attrs?: string };
-export type PortableBlock = { _type: 'block'; _key: string; markDefs?: MarkDef[]; children?: (PortableSpan | PortableInline)[] };
-
-export type TextItem = { _type: 'textItem'; _key: string; label?: string; content?: PortableBlock[]; href?: string };
-export type ImageItem = {
-  _type: 'imageItem';
-  _key: string;
-  image?: { asset?: { _ref: string } };
-  originalSrc?: string;
-  originalAssetId?: string;
-  alt?: string;
-};
-export type PageSection = { _type: 'pageSection'; _key: string; title?: string; items?: (TextItem | ImageItem)[] };
-
-export type Redirect = { source: string; destination: string };

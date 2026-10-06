@@ -46,10 +46,16 @@ export const STYLE_TAG: Record<string, { tag: string; className?: string }> = {
 const textWithBreaks = (text: string, key: string): ReactNode =>
   text.includes('\n') ? text.split('\n').flatMap((part, i) => (i ? [<br key={`${key}b${i}`} />, part] : [part])) : text;
 
+/** How a decorator is drawn, when a component wants its own look (e.g. the
+    landing page renders the Gold style as a purple <em>). */
+export type MarkRenderers = Partial<Record<string, (children: ReactNode, key: string) => ReactNode>>;
+
 /** The inline content of one block (spans + marks) as React nodes. */
-export function Inline({ block }: { block: Pick<Block, 'children' | 'markDefs'> }) {
+export function Inline({ block, marks }: { block: Pick<Block, 'children' | 'markDefs'>; marks?: MarkRenderers }) {
   const defs = new Map((block.markDefs ?? []).map((d) => [d._key, d]));
   const wrap = (mark: string, children: ReactNode, key: string): ReactNode => {
+    const custom = marks?.[mark];
+    if (custom) return custom(children, key);
     if (DECORATOR[mark]) return createElement(DECORATOR[mark][0], { key, className: DECORATOR[mark][1] }, children);
     const d = defs.get(mark);
     if (!d) return children;
