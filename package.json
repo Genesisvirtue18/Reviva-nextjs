@@ -7,8 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "extract": "node scripts/extract-html.mjs ../public_html",
-    "sanity:import": "node --env-file=.env.local scripts/import-to-sanity.mjs",
     "sanity:migrate-blocks": "node --env-file=.env.local scripts/migrate-to-blocks.mjs"
   },
   "dependencies": {

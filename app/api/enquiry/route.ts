@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { writeClient } from '@/lib/sanity';
 
-/* Replaces contact-process.php at the same URL: validates a lead, stores it
-   as an "enquiry" in Sanity and (optionally) emails it via Resend. Answers
-   JSON for fetch/XHR callers, otherwise redirects like the PHP version. */
+/* POST /api/enquiry: validates a lead from the contact form, stores it as an
+   "enquiry" in Sanity (Studio → Enquiries) and, when configured, emails it
+   via Resend. Answers JSON for the form script; a plain form post (no
+   JavaScript) is redirected back to /contact?sent=1. */
 
 const TRACKING = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'referrer', 'landing_page'] as const;
 

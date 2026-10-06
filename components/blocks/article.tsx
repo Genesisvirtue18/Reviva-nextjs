@@ -11,7 +11,7 @@ import { pictureSrc, type Picture } from '@/lib/image';
    hidden `design` objects, so its stylesheet applies unchanged. */
 
 type Design = { tag?: string; className?: string };
-type CardPart = { tag: string; className?: string; role: 'badge' | 'title' | 'text' | 'body' };
+type CardPart = { tag?: string; className?: string; role: 'badge' | 'title' | 'text' | 'body' | 'header' | 'list' | 'content'; inner?: { tag: string; className?: string }[] };
 
 export type ArticleItem =
   | { _type: 'articleText'; _key: string; body?: RichValue }
@@ -20,11 +20,21 @@ export type ArticleItem =
       _type: 'articleCards';
       _key: string;
       design?: Design & { cardTag?: string; cardClass?: string; parts?: CardPart[] };
-      cards?: { _key: string; badge?: RichValue; title?: RichValue; text?: RichValue; body?: RichValue }[];
+      cards?: {
+        _key: string;
+        badge?: RichValue;
+        title?: RichValue;
+        text?: RichValue;
+        body?: RichValue;
+        items?: { _key: string; text?: RichValue }[];
+        content?: ArticleItem[];
+      }[];
     }
+  | { _type: 'articleNote'; _key: string; design?: Design & { iconClass?: string }; icon?: string; body?: RichValue }
+  | { _type: 'articleMedia'; _key: string; design?: Design & { imageClass?: string; textClass?: string }; picture?: Picture; body?: RichValue }
   | { _type: 'articleList'; _key: string; design?: Design; items?: { _key: string; text?: RichValue }[] }
   | { _type: 'articleImage'; _key: string; design?: Design; picture?: Picture }
-  | { _type: 'articleButton'; _key: string; design?: Design & { wrapTag?: string; wrapClass?: string }; label?: string; href?: string; newTab?: boolean }
+  | { _type: 'articleButton'; _key: string; design?: Design & { wrapTag?: string; wrapClass?: string }; label?: RichValue; href?: string; newTab?: boolean }
   | {
       _type: 'articleCallout';
       _key: string;
@@ -45,7 +55,8 @@ export type ArticleSection = {
 export type ArticleBlock = { _type: 'article'; _key: string; design?: Design & { innerTag?: string; innerClass?: string }; sections?: (ArticleSection | CustomPart)[] };
 type CustomPart = { _type: 'customSection'; _key: string; templateHtml?: string; groups?: PageSection[] };
 
-const Line = ({ value }: { value?: RichValue }) => {
+const Line = ({ value }: { value?: RichValue | string }) => {
+  if (typeof value === 'string') return <>{value}</>; // older plain-text values
   const block = value?.find((b) => b._type === 'block') as Block | undefined;
   return block ? <Inline block={block} /> : null;
 };
@@ -65,9 +76,29 @@ function Item({ it }: { it: ArticleItem }) {
           createElement(
             d.cardTag ?? 'div',
             { className: d.cardClass, key: c._key },
-            (d.parts ?? []).map((p, i) =>
-              createElement(p.tag, { className: p.className, key: i }, p.role === 'body' ? <Rich value={c.body} /> : <Line value={c[p.role]} />),
-            ),
+            (d.parts ?? []).map((p, i) => {
+              if (p.role === 'content') return (c.content ?? []).map((it) => <Item it={it} key={it._key} />);
+              if (p.role === 'header') {
+                const [b, t] = p.inner ?? [];
+                return createElement(
+                  p.tag ?? 'div',
+                  { className: p.className, key: i },
+                  createElement(b?.tag ?? 'span', { className: b?.className, key: 'b' }, <Line value={c.badge} />),
+                  createElement(t?.tag ?? 'h3', { className: t?.className, key: 't' }, <Line value={c.title} />),
+                );
+              }
+              if (p.role === 'list')
+                return createElement(
+                  p.tag ?? 'ul',
+                  { className: p.className, key: i },
+                  (c.items ?? []).map((li) => (
+                    <li key={li._key}>
+                      <Line value={li.text} />
+                    </li>
+                  )),
+                );
+              return createElement(p.tag ?? 'div', { className: p.className, key: i }, p.role === 'body' ? <Rich value={c.body} /> : <Line value={c[p.role]} />);
+            }),
           ),
         ),
       );
@@ -88,10 +119,30 @@ function Item({ it }: { it: ArticleItem }) {
       const d = it.design ?? {};
       const a = (
         <a className={d.className} href={it.href} {...(it.newTab ? { target: '_blank', rel: 'noopener' } : {})}>
-          {it.label}
+          <Line value={it.label} />
         </a>
       );
       return d.wrapTag ? createElement(d.wrapTag, { className: d.wrapClass }, a) : a;
+    }
+    case 'articleNote':
+      return createElement(
+        it.design?.tag ?? 'div',
+        { className: it.design?.className },
+        <div className={it.design?.iconClass}>{it.icon}</div>,
+        <Rich value={it.body} />,
+      );
+    case 'articleMedia': {
+      const d = it.design ?? {};
+      return createElement(
+        d.tag ?? 'div',
+        { className: d.className },
+        <div className={d.imageClass}>
+          <img src={pictureSrc(it.picture)} alt={it.picture?.alt ?? ''} />
+        </div>,
+        <div className={d.textClass}>
+          <Rich value={it.body} />
+        </div>,
+      );
     }
     case 'articleCallout': {
       const d = it.design ?? {};
@@ -99,9 +150,11 @@ function Item({ it }: { it: ArticleItem }) {
         <div className={d.className}>
           <div className={d.innerClass}>
             <h3>{it.heading}</h3>
-            <p>
-              <Line value={it.text} />
-            </p>
+            {it.text ? (
+              <p>
+                <Line value={it.text} />
+              </p>
+            ) : null}
             <a className={d.buttonClass} href={it.buttonHref}>
               {it.buttonLabel}
             </a>

@@ -12,7 +12,6 @@ const P_CLASS_STYLE = { 'center-text': 'center', highlight: 'highlight', 'center
 let keyN = 0;
 export const key = (p = 'k') => `${p}${(keyN++).toString(36)}`;
 
-const attrsJson = (node) => (Object.keys(node.attribs ?? {}).length ? JSON.stringify(node.attribs) : undefined);
 
 /** Inline children of an element -> { children, markDefs } (whitespace collapsed like a browser). */
 export function inlineOf(el, { trim = true } = {}) {
@@ -30,14 +29,14 @@ export function inlineOf(el, { trim = true } = {}) {
     if (node.name === 'br') return push('\n', marks);
     if (!INLINE.has(node.name)) throw new Unsupported(`inline <${node.name}>`);
     let mark;
-    if (DECORATOR[node.name] && !Object.keys(node.attribs).length) mark = DECORATOR[node.name];
+    const attrs = Object.keys(node.attribs);
+    if (DECORATOR[node.name] && !attrs.length) mark = DECORATOR[node.name];
+    else if (node.name === 'span' && attrs.length === 1 && node.attribs.class === 'highlight-name') mark = 'nameHighlight';
     else if (node.name === 'a') {
+      if (attrs.some((a) => !['href', 'target', 'rel'].includes(a))) throw new Unsupported(`link with ${attrs.join(',')}`);
       mark = key('m');
-      markDefs.push({ _type: 'link', _key: mark, href: node.attribs.href ?? '', attrs: attrsJson(node) });
-    } else {
-      mark = key('m');
-      markDefs.push({ _type: 'styled', _key: mark, tag: node.name, attrs: attrsJson(node) });
-    }
+      markDefs.push({ _type: 'link', _key: mark, href: node.attribs.href ?? '', ...(node.attribs.target === '_blank' ? { newTab: true } : {}) });
+    } else throw new Unsupported(`styled <${node.name} ${attrs.join(',')}>`);
     if (!node.children.length) throw new Unsupported(`empty <${node.name}>`);
     node.children.forEach((c) => walk(c, [...marks, mark]));
   };

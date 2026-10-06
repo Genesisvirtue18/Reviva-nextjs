@@ -12,11 +12,9 @@ import type { Post, PostCard } from '@/components/blog';
 
 const FETCH_OPTS = { cache: 'no-store' as const };
 
-// Technical HTML fields were Sanity "code" objects ({code}); now plain text.
-const html = (f: string) => `"${f}": coalesce(${f}.code, ${f})`;
-const META = `_id, title, metaDescription, bodyClass, ${html('headHtml')}, ${html('bodyStartHtml')}, ${html('bodyEndHtml')}`;
+const META = `_id, title, metaDescription, noindex, shareImage, bodyClass`;
 const PAGE_QUERY = defineQuery(`*[_type == "page" && path == $path][0]{
-  ${META}, path, name, blocks, whatsapp, scriptsHtml }`);
+  ${META}, path, name, blocks, whatsapp }`);
 const POST_FIELDS = `title, "path": "/blog/" + slug.current, publishedAt, readMinutes, excerpt, cover`;
 const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slug][0]{
   ${META}, ${POST_FIELDS}, author, body, design, seoTitle }`);
@@ -95,6 +93,7 @@ const EMPTY: SiteSettings = {
   footerTreatments: [], footerClinic: [], locations: [], email: '', hours: '', legal: [],
   bookLabel: '', bookLabelShort: '', footerHeadings: { treatments: '', clinic: '', visit: '', hours: '' }, copyright: '',
   notFound: { eyebrow: '', title: '', buttonLabel: '', buttonHref: '/' }, whatsappUrl: '',
+  siteUrl: 'https://revivaskinandsurgery.com', clinicName: '', gaId: '', gtmId: '', googleVerification: '',
   postCta: { eyebrow: '', title: '', text: '', altText: '', whatsappLabel: '', whatsappHref: '', bookLabel: '', bookHref: '' },
   blogSidebar: { treatmentsTitle: '', treatments: [], ctaEyebrow: '', ctaTitle: '', ctaText: '', ctaButtonLabel: '', ctaButtonHref: '' },
 };

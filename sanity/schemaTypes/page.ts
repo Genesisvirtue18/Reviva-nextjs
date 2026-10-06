@@ -34,6 +34,8 @@ export const page = defineType({
     }),
     defineField({ name: 'title', title: 'Page title (browser tab / Google)', type: 'string', group: 'seo', validation: (r) => r.required() }),
     defineField({ name: 'metaDescription', title: 'Google description', type: 'text', rows: 3, group: 'seo' }),
+    defineField({ name: 'shareImage', title: 'Share image (optional)', type: 'picture', group: 'seo', description: 'Shown when this page is shared. Leave empty to use the one in Site Settings.' }),
+    defineField({ name: 'noindex', title: 'Hide from Google', type: 'boolean', group: 'seo', initialValue: false }),
     defineField({
       name: 'path',
       title: 'Page address (URL)',
@@ -43,13 +45,8 @@ export const page = defineType({
       validation: (r) => r.required().custom((v) => (!v || v.startsWith('/') ? true : 'Must start with /')),
     }),
 
-    // Technical parts of the page (tracking / head tags / page scripts). The
-    // site uses them; editors never need to see them.
+    // Which floating WhatsApp button / page CSS class the page uses.
     defineField({ name: 'whatsapp', type: 'boolean', hidden: true, initialValue: true }),
-    hidden('scriptsHtml'),
-    hidden('headHtml'),
-    hidden('bodyStartHtml'),
-    hidden('bodyEndHtml'),
     hidden('bodyClass', 'string'),
   ],
   preview: {

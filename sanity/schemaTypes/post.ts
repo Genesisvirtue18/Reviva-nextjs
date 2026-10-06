@@ -26,6 +26,8 @@ export const post = defineType({
     defineField({ name: 'body', title: 'Article', type: 'richText', group: 'content' }),
     defineField({ name: 'seoTitle', title: 'Page title (browser tab / Google)', type: 'string', group: 'seo', description: 'Leave empty to use the post title.' }),
     defineField({ name: 'metaDescription', title: 'Google description', type: 'text', rows: 3, group: 'seo' }),
+    defineField({ name: 'shareImage', title: 'Share image (optional)', type: 'picture', group: 'seo', description: 'Shown when this page is shared. Leave empty to use the one in Site Settings.' }),
+    defineField({ name: 'noindex', title: 'Hide from Google', type: 'boolean', group: 'seo', initialValue: false }),
     defineField({
       name: 'slug',
       title: 'Page address',
@@ -36,9 +38,6 @@ export const post = defineType({
       validation: (r) => r.required(),
     }),
     hidden('design', 'string'),
-    hidden('headHtml'),
-    hidden('bodyStartHtml'),
-    hidden('bodyEndHtml'),
     hidden('bodyClass', 'string'),
   ],
   orderings: [{ title: 'Newest first', name: 'newest', by: [{ field: 'publishedAt', direction: 'desc' }] }],

@@ -22,6 +22,7 @@ export const siteSettings = defineType({
     { name: 'header', title: 'Header', default: true },
     { name: 'footer', title: 'Footer' },
     { name: 'blog', title: 'Blog' },
+    { name: 'seo', title: 'Google & tracking' },
     { name: 'notFound', title: '404 page' },
   ],
   fields: [
@@ -123,6 +124,12 @@ export const siteSettings = defineType({
       group: 'footer',
       description: 'Shown after "© <current year>".',
     }),
+    defineField({ name: 'clinicName', title: 'Clinic name (Google / social sharing)', type: 'string', group: 'seo' }),
+    defineField({ name: 'siteUrl', title: 'Website address', type: 'string', group: 'seo', description: 'e.g. https://revivaskinandsurgery.com - used for Google (canonical links, sitemap).' }),
+    defineField({ name: 'shareImage', title: 'Share image (shown when a page is shared on WhatsApp / Facebook)', type: 'picture', group: 'seo' }),
+    defineField({ name: 'gaId', title: 'Google Analytics ID', type: 'string', group: 'seo', description: 'e.g. G-NK5136X7JT' }),
+    defineField({ name: 'gtmId', title: 'Google Tag Manager ID', type: 'string', group: 'seo', description: 'e.g. GTM-M3DMBLNW' }),
+    defineField({ name: 'googleVerification', title: 'Google Search Console verification code', type: 'string', group: 'seo' }),
     defineField({ name: 'whatsappUrl', title: 'WhatsApp link (floating button)', type: 'string', group: 'header', description: 'e.g. https://wa.me/917827448711' }),
     defineField({
       name: 'postCta',

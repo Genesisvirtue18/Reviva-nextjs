@@ -4,7 +4,7 @@ import { EnvelopeIcon } from '@sanity/icons/Envelope';
 export const STATUSES = ['new', 'contacted', 'booked', 'closed'] as const;
 export type Status = (typeof STATUSES)[number];
 
-/* Leads posted to /contact-process.php (replaces the old MySQL enquiries table).
+/* Leads from the contact form (POST /api/enquiry; replaces the old MySQL enquiries table).
    Worked from the "Enquiries" dashboard tool or the status lists. */
 export const enquiry = defineType({
   name: 'enquiry',

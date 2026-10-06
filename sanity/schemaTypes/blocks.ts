@@ -12,7 +12,6 @@ import { LinkIcon } from '@sanity/icons/Link';
 import { HomeIcon } from '@sanity/icons/Home';
 import { ThListIcon } from '@sanity/icons/ThList';
 import { ArrowRightIcon } from '@sanity/icons/ArrowRight';
-import { ComponentIcon } from '@sanity/icons/Component';
 
 /* Page-builder sections - one per component in components/blocks. Field
    names match what editors see on the website. `design` (hidden) records
@@ -42,6 +41,25 @@ export const goldDecorator = {
   component: ({ children }: { children?: ReactNode }) => createElement('span', { style: { color: GOLD } }, children),
 };
 
+/* The doctor's name style on the clinic pages (<span class="highlight-name">). */
+const nameDecorator = {
+  title: 'Doctor name style',
+  value: 'nameHighlight',
+  icon: () => createElement('span', { style: { fontWeight: 700, fontSize: 12 } }, 'Name'),
+};
+
+/* A link in text: where it goes, and whether it opens a new tab. */
+const linkAnnotation = defineArrayMember({
+  name: 'link',
+  title: 'Link',
+  type: 'object',
+  icon: LinkIcon,
+  fields: [
+    defineField({ name: 'href', title: 'URL', type: 'string', description: 'e.g. /contact, https://…, tel:+91…' }),
+    defineField({ name: 'newTab', title: 'Open in a new tab', type: 'boolean' }),
+  ],
+});
+
 /* One line of text with optional gold words (titles, card texts...). */
 export const textLine = defineType({
   name: 'textLine',
@@ -54,15 +72,7 @@ export const textLine = defineType({
       lists: [],
       marks: {
         decorators: [goldDecorator, { title: 'Bold', value: 'strong' }, { title: 'Italic', value: 'em' }],
-        annotations: [
-          defineArrayMember({
-            name: 'link',
-            title: 'Link',
-            type: 'object',
-            icon: LinkIcon,
-            fields: [defineField({ name: 'href', title: 'URL', type: 'string' }), defineField({ name: 'attrs', type: 'string', hidden: true })],
-          }),
-        ],
+        annotations: [linkAnnotation],
       },
     }),
   ],
@@ -130,22 +140,9 @@ export const richText = defineType({
           { title: 'Italic', value: 'em' },
           { title: 'Underline', value: 'underline' },
           goldDecorator,
+          nameDecorator,
         ],
-        annotations: [
-          defineArrayMember({
-            name: 'link',
-            title: 'Link',
-            type: 'object',
-            icon: LinkIcon,
-            fields: [str('href', 'URL', 'e.g. /contact, https://…, tel:+91…'), defineField({ name: 'attrs', type: 'string', hidden: true })],
-          }),
-          defineArrayMember({
-            name: 'styled',
-            title: 'Highlight (original style)',
-            type: 'object',
-            fields: [defineField({ name: 'tag', type: 'string', hidden: true }), defineField({ name: 'attrs', type: 'string', hidden: true })],
-          }),
-        ],
+        annotations: [linkAnnotation],
       },
     }),
     defineArrayMember({ type: 'figure' }),
@@ -368,7 +365,10 @@ const cardField = (field: ReturnType<typeof defineField>, role: string) => ({
   ...field,
   hidden: ({ document, parent }: { document?: unknown; parent?: { _key?: string } }) => {
     const roles = cardRoles(document, parent?._key);
-    return roles ? !roles.includes(role) : false;
+    if (!roles) return false;
+    // A header row holds the number and the title.
+    const shown = roles.flatMap((r) => (r === 'header' ? ['badge', 'title'] : [r]));
+    return !shown.includes(role);
   },
 });
 
@@ -381,6 +381,16 @@ export const articleCard = defineType({
     cardField(line('title', 'Title'), 'title'),
     cardField(line('text', 'Text'), 'text'),
     cardField(rich('body', 'Text'), 'body'),
+    cardField(list('items', 'Points', 'articleListItem'), 'list'),
+    cardField(
+      defineField({
+        name: 'content',
+        title: 'Content',
+        type: 'array',
+        of: ['articleText', 'articleCards', 'articleList', 'articleBox', 'articleNote'].map((t) => defineArrayMember({ type: t })),
+      }),
+      'content',
+    ),
   ],
   preview: {
     select: { badge: 'badge', title: 'title', text: 'text', body: 'body' },
@@ -428,8 +438,26 @@ export const articleButton = defineType({
   title: 'Button',
   type: 'object',
   icon: ArrowRightIcon,
-  fields: [design, str('label', 'Button text'), str('href', 'Button link'), defineField({ name: 'newTab', title: 'Open in a new tab', type: 'boolean' })],
-  preview: { select: { title: 'label', subtitle: 'href' } },
+  fields: [design, line('label', 'Button text'), str('href', 'Button link'), defineField({ name: 'newTab', title: 'Open in a new tab', type: 'boolean' })],
+  preview: { select: { label: 'label', subtitle: 'href' }, prepare: ({ label, subtitle }) => ({ title: plain(label) || 'Button', subtitle }) },
+});
+
+export const articleNote = defineType({
+  name: 'articleNote',
+  title: 'Note',
+  type: 'object',
+  icon: BulbOutlineIcon,
+  fields: [design, str('icon', 'Icon (a symbol, e.g. ✦)'), rich('body', 'Text')],
+  preview: { select: { body: 'body' }, prepare: ({ body }) => ({ title: plain(body).slice(0, 80) || 'Note', subtitle: 'Note' }) },
+});
+
+export const articleMedia = defineType({
+  name: 'articleMedia',
+  title: 'Picture with text',
+  type: 'object',
+  icon: ImageIcon,
+  fields: [design, defineField({ name: 'picture', type: 'picture' }), rich('body', 'Text')],
+  preview: { select: { media: 'picture.image', body: 'body' }, prepare: ({ media, body }) => ({ title: plain(body).slice(0, 80) || 'Picture with text', subtitle: 'Picture with text', media }) },
 });
 
 export const articleCallout = defineType({
@@ -454,7 +482,9 @@ export const articleSection = defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: ['articleText', 'articleCards', 'articleList', 'articleBox', 'articleImage', 'articleButton', 'articleCallout'].map((t) => defineArrayMember({ type: t })),
+      of: ['articleText', 'articleCards', 'articleList', 'articleBox', 'articleNote', 'articleMedia', 'articleImage', 'articleButton', 'articleCallout'].map((t) =>
+        defineArrayMember({ type: t }),
+      ),
     }),
   ],
   preview: {
@@ -470,7 +500,7 @@ export const article = defineType({
   icon: DocumentTextIcon,
   fields: [
     design,
-    defineField({ name: 'sections', title: 'Sections', type: 'array', of: [defineArrayMember({ type: 'articleSection' }), defineArrayMember({ type: 'customSection' })] }),
+    defineField({ name: 'sections', title: 'Sections', type: 'array', of: [defineArrayMember({ type: 'articleSection' })] }),
   ],
   preview: { select: { sections: 'sections' }, prepare: ({ sections }) => ({ title: 'Article', subtitle: `${sections?.length ?? 0} sections` }) },
 });
@@ -603,6 +633,52 @@ export const linkGroups = defineType({
   preview: { select: { title: 'title' }, prepare: ({ title }) => ({ title: title || 'Link list', subtitle: 'Link list' }) },
 });
 
+export const contactDetail = defineType({
+  name: 'contactDetail',
+  title: 'Detail',
+  type: 'object',
+  fields: [
+    str('icon', 'Icon (a symbol, e.g. ☎ ✉ ⌖)'),
+    defineField({ name: 'color', title: 'Icon colour', type: 'string', options: { list: [{ title: 'Gold', value: 'gold' }, { title: 'Green', value: 'green' }], layout: 'radio', direction: 'horizontal' }, initialValue: 'gold' }),
+    str('label', 'Label (e.g. GHAZIABAD)'),
+    txt('value', 'Text (phone, email or address)', 2),
+    str('href', 'Link (optional, e.g. tel:+917827448711)'),
+    txt('note', 'Small note (optional, e.g. opening hours)', 2),
+  ],
+  preview: { select: { title: 'label', subtitle: 'value' } },
+});
+
+export const contactMap = defineType({
+  name: 'contactMap',
+  title: 'Map',
+  type: 'object',
+  fields: [str('title', 'Name (for screen readers)'), str('embedUrl', 'Google Maps embed link', 'Google Maps → Share → Embed a map → copy the src="…" address')],
+  preview: { select: { title: 'title' } },
+});
+
+export const contactSection = defineType({
+  name: 'contactSection',
+  title: 'Contact form & details',
+  type: 'object',
+  icon: HomeIcon,
+  fields: [
+    str('formTitle', 'Form heading'),
+    defineField({
+      name: 'labels',
+      title: 'Form field names',
+      type: 'object',
+      options: { collapsible: true, collapsed: true },
+      fields: ['name', 'phone', 'email', 'concern', 'message'].map((n) => str(n, n[0].toUpperCase() + n.slice(1))),
+    }),
+    defineField({ name: 'concerns', title: 'Concern / treatment choices', type: 'array', of: [defineArrayMember({ type: 'string' })] }),
+    str('buttonLabel', 'Button text'),
+    str('infoTitle', 'Details heading'),
+    list('details', 'Clinic details', 'contactDetail'),
+    list('maps', 'Maps', 'contactMap'),
+  ],
+  preview: { select: { title: 'formTitle' }, prepare: ({ title }) => ({ title: title || 'Contact form', subtitle: 'Contact form & details (enquiries go to Studio → Enquiries)' }) },
+});
+
 export const postGrid = defineType({
   name: 'postGrid',
   title: 'All blog posts (automatic)',
@@ -620,33 +696,20 @@ export const spacer = defineType({
   preview: { prepare: () => ({ title: '— empty line —' }) },
 });
 
-export const customSection = defineType({
-  name: 'customSection',
-  title: 'Section (fixed design)',
-  type: 'object',
-  icon: ComponentIcon,
-  fields: [
-    defineField({ name: 'title', type: 'string', readOnly: true }),
-    defineField({ name: 'groups', title: 'Text & pictures', type: 'array', of: [defineArrayMember({ type: 'pageSection' })], options: { sortable: false, disableActions: ['add', 'addBefore', 'addAfter', 'remove', 'duplicate', 'copy'] } }),
-    defineField({ name: 'templateHtml', type: 'text', hidden: true }),
-  ],
-  preview: { select: { title: 'title' }, prepare: ({ title }) => ({ title: title || 'Section', subtitle: 'Fixed design - text & pictures editable' }) },
-});
-
 /** The page builder field. */
 export const PAGE_BLOCKS = [
   'homeHero', 'serviceHero', 'pageHero', 'legalHero', 'banner',
   'serviceOverview', 'procedure', 'beforeAfter', 'faq', 'ctaBanner',
   'article', 'legalContent', 'galleryFilters', 'galleryGrid',
   'reviews', 'treatmentCards', 'clinicIntro', 'clinicGallery', 'signatureTreatments',
-  'linkGroups', 'postGrid', 'spacer', 'customSection',
+  'linkGroups', 'contactSection', 'postGrid', 'spacer',
 ];
 
 export const blockTypes = [
   textLine, picture, linkItem, buttonLink, richText, figure,
   serviceHero, overviewColumn, serviceOverview, procedureStep, procedure, beforeAfter, faqItem, faq, ctaBanner, banner,
   pageHero, legalHero, legalClause, legalContent, galleryFilters, galleryGrid,
-  articleText, articleBox, articleCard, articleCards, articleListItem, articleList, articleImage, articleButton, articleCallout, articleSection, article,
+  articleText, articleBox, articleCard, articleCards, articleListItem, articleList, articleImage, articleButton, articleCallout, articleNote, articleMedia, articleSection, article,
   heroContact, heroStat, homeHero, review, reviews, treatmentCard, treatmentCards, clinicIntro, clinicGallery, signatureCard, signatureTreatments,
-  linkGroup, linkGroups, postGrid, spacer, customSection,
+  linkGroup, linkGroups, contactDetail, contactMap, contactSection, postGrid, spacer,
 ];

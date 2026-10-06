@@ -1,6 +1,7 @@
 import { Rich, type RichValue } from '@/lib/rich';
 import { pictureSrc, type Picture } from '@/lib/image';
 import type { SiteSettings } from '@/lib/types';
+import { LoadMore } from './LoadMore';
 
 /* Blog posts, the blog index and the parts every post shares (consultation
    box, previous/next links, sidebar). The shared parts are generated: latest
@@ -234,16 +235,14 @@ export function PostView({ post, s, latest, prev, next }: { post: Post; s: SiteS
 }
 
 /** The grid of all posts on /blogs. */
-const FIRST_BATCH = 12;
-
 export function PostGrid({ posts }: { posts: PostCard[] }) {
   return (
     <section className="blog-section">
-      <div className="blog-grid">
-        {posts.map((p, i) => {
+      <LoadMore>
+        {posts.map((p) => {
           const img = pictureSrc(p.cover);
           return (
-            <a className="blog-card" href={p.path} key={p.path} {...(i >= FIRST_BATCH ? { 'data-more': '' } : {})}>
+            <a className="blog-card" href={p.path} key={p.path}>
               <span className="blog-card__frame">{img ? <img src={img} alt="" width="600" height="400" loading="lazy" decoding="async" /> : null}</span>
               <span className="blog-card__body">
                 <span className="blog-card__meta">
@@ -261,13 +260,7 @@ export function PostGrid({ posts }: { posts: PostCard[] }) {
             </a>
           );
         })}
-      </div>
-      {/* Revealed and wired up by the /blogs page script when there are more posts. */}
-      <div className="blog-more">
-        <button type="button" className="blog-more__btn" id="loadMore" hidden>
-          Load more articles <span className="blog-more__count"></span>
-        </button>
-      </div>
+      </LoadMore>
     </section>
   );
 }

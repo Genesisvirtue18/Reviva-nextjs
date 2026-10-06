@@ -372,7 +372,7 @@
 
   /* ======================================================================
      CONTACT FORM
-     Sends the enquiry to /contact-process.php (saved in Sanity → Enquiries)
+     Sends the enquiry to /api/enquiry (saved in Sanity → Enquiries)
      without leaving the page, with the page it came from and any ad
      tracking parameters. The old site only showed an alert and never sent
      anything.
@@ -403,7 +403,7 @@
       } catch (err) { /* ignore */ }
 
       if (button) { button.disabled = true; }
-      fetch(form.getAttribute('action') || '/contact-process.php', {
+      fetch('/api/enquiry', {
         method: 'POST',
         body: data,
         headers: { Accept: 'application/json' }

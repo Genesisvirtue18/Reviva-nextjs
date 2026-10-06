@@ -1,3 +1,5 @@
+import type { Picture } from './image';
+
 export type Link = { label: string; href: string };
 
 export type NavColumn = {
@@ -32,6 +34,13 @@ export type SiteSettings = {
   copyright: string;
   notFound: { eyebrow: string; title: string; buttonLabel: string; buttonHref: string };
   whatsappUrl: string;
+  /** Google & tracking */
+  siteUrl: string;
+  clinicName: string;
+  gaId: string;
+  gtmId: string;
+  googleVerification: string;
+  shareImage?: Picture;
   /** Consultation box under every blog post. */
   postCta: { eyebrow: string; title: string; text: string; altText: string; whatsappLabel: string; whatsappHref: string; bookLabel: string; bookHref: string };
   /** Blog sidebar texts and treatment links. */
@@ -52,10 +61,11 @@ export type DocMeta = {
   title: string;
   seoTitle?: string;
   metaDescription?: string;
+  /** "Hide from Google" */
+  noindex?: boolean;
+  /** Overrides the site's share image for this page. */
+  shareImage?: Picture;
   bodyClass?: string;
-  headHtml?: string;
-  bodyStartHtml?: string;
-  bodyEndHtml?: string;
 };
 
 export type Page = DocMeta & {
@@ -64,7 +74,6 @@ export type Page = DocMeta & {
   /** Page-builder sections (components/blocks). */
   blocks?: { _type: string; _key: string; [k: string]: unknown }[];
   whatsapp?: boolean;
-  scriptsHtml?: string;
 };
 
 /* Editable page fields (see scripts/lib/html-fields.mjs). */

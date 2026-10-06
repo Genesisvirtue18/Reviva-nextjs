@@ -39,7 +39,6 @@ export default async function SitePage({ params }: PageProps<'/[[...path]]'>) {
       <div className="rv-scrim"></div>
       <Blocks blocks={doc.blocks} data={{ posts }} />
       {doc.whatsapp !== false ? <WhatsAppButton href={settings.whatsappUrl} /> : null}
-      {doc.scriptsHtml ? <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: doc.scriptsHtml }} /> : null}
     </div>
   );
 }

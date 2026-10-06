@@ -1,5 +1,6 @@
 import { GalleryFilters, GalleryGrid, LegalContent, LegalHero, PageHero } from './pages';
 import { Article } from './article';
+import { ContactSection } from './contact';
 import { ClinicGallery, ClinicIntro, HomeHero, LinkGroups, Reviews, SignatureTreatments, TreatmentCards } from './places';
 
 /* Section components beyond the treatment pages (heroes, galleries,
@@ -20,4 +21,5 @@ export const BLOCKS_MORE: Record<string, (props: { b: any }) => React.ReactNode>
   clinicGallery: ClinicGallery,
   signatureTreatments: SignatureTreatments,
   linkGroups: LinkGroups,
+  contactSection: ContactSection,
 };

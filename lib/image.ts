@@ -15,6 +15,13 @@ export function imageUrl(image: SanityImage): string | null {
 /** A picture field: { image (upload), src (original file), alt }. */
 export type Picture = { image?: SanityImage; src?: string; originalAssetId?: string; alt?: string };
 
+/** A picture as a full URL (social sharing, structured data). */
+export function absoluteImage(p: Picture | null | undefined, site: string): string | undefined {
+  const src = pictureSrc(p);
+  if (!src) return undefined;
+  return /^https?:/.test(src) ? src : site + (src.startsWith('/') ? src : `/${src}`);
+}
+
 /** The URL to show: a newly uploaded image, else the original file. */
 export function pictureSrc(p?: Picture | null): string | undefined {
   if (!p) return undefined;

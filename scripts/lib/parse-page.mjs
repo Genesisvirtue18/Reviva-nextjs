@@ -361,24 +361,90 @@ function articleCards(el) {
   const sigOf = (c) => `${c.name}.${cls(c)}`;
   if (new Set(cards.map(sigOf)).size !== 1) throw new Unsupported('cards: mixed');
   const partsSig = (c) => tagsOf(c).map(sigOf).join('|');
-  if (new Set(cards.map(partsSig)).size !== 1) throw new Unsupported('cards: parts differ');
+  if (new Set(cards.map(partsSig)).size !== 1) return freeCards(el, cards, sigOf);
   const first = tagsOf(cards[0]);
   if (first.length < 2 || first.length > 3) throw new Unsupported('cards: part count');
-  // A part is one line (badge / title / text), or a block of rich text
-  // (a <div> holding a small heading, paragraphs, a list): "body".
-  const isBody = (p) => p.name === 'div' && !cls(p) && tagsOf(p).length > 0 && tagsOf(p).every(isSimple);
-  const roles = first.length === 2 ? ['badge', isBody(first[1]) ? 'body' : 'text'] : ['badge', 'title', isBody(first[2]) ? 'body' : 'text'];
+  // A part is one line (badge / title / text), a block of rich text (a
+  // <div> holding a small heading, paragraphs, a list: "body"), a header row
+  // (<div><span>01</span><h3>Title</h3></div>: "header" = badge + title) or a
+  // bullet list ("list").
+  const isBody = (p) => p.name === 'div' && !cls(p) && !(p.children ?? []).some((c) => c.type === 'text' && /\S/.test(c.data)) && (p.children ?? []).some((c) => c.type === 'tag') && (p.children ?? []).filter((c) => c.type === 'tag').every(isSimple);
+  // Header row = first part only: a short label (<span>/<div>) then a heading.
+  const els = (p) => (p.children ?? []).filter((c) => c.type === 'tag');
+  const hasText = (p) => (p.children ?? []).some((c) => c.type === 'text' && /\S/.test(c.data));
+  const isHeader = (p) => {
+    const [b, t] = els(p);
+    return p.name === 'div' && !hasText(p) && els(p).length === 2 && ['span', 'div'].includes(b.name) && /^h[2-5]$/.test(t.name) && inlineOnlyEl(b) && inlineOnlyEl(t);
+  };
+  const isList = (p) => (p.name === 'ul' || p.name === 'ol') && !hasText(p) && els(p).every((li) => li.name === 'li');
+  const roleOf = (p, fallback) => (isList(p) ? 'list' : isBody(p) ? 'body' : fallback);
+  const roles =
+    first.length === 2 ? [isHeader(first[0]) ? 'header' : 'badge', roleOf(first[1], 'text')] : ['badge', 'title', roleOf(first[2], 'text')];
   return {
     _type: 'articleCards',
     _key: key('ac'),
-    design: { ...design(el), cardTag: cards[0].name, cardClass: cls(cards[0]) || undefined, parts: first.map((p, i) => ({ tag: p.name, className: cls(p) || undefined, role: roles[i] })) },
+    design: {
+      ...design(el),
+      cardTag: cards[0].name,
+      cardClass: cls(cards[0]) || undefined,
+      parts: first.map((p, i) => ({
+        tag: p.name,
+        className: cls(p) || undefined,
+        role: roles[i],
+        ...(roles[i] === 'header' ? { inner: tagsOf(p).map((x) => ({ tag: x.name, className: cls(x) || undefined })) } : {}),
+      })),
+    },
     cards: cards.map((c) => {
       const card = { _key: key('cd') };
       tagsOf(c).forEach((p, i) => {
         noAttrs(p, ['class']);
-        card[roles[i]] = roles[i] === 'body' ? richOf(p) : lineOf(p);
+        if (roles[i] === 'body') card.body = richOf(p);
+        else if (roles[i] === 'header') {
+          const [b, t] = tagsOf(p);
+          card.badge = lineOf(b);
+          card.title = lineOf(t);
+        } else if (roles[i] === 'list') card.items = tagsOf(p).map((li) => ({ _key: key('li'), text: lineOf(noAttrs(li)) }));
+        else card[roles[i]] = lineOf(p);
       });
       return card;
+    }),
+  };
+}
+
+const elsOf = (el) => (el.children ?? []).filter((c) => c.type === 'tag');
+const textIn = (el) => (el.children ?? []).some((c) => c.type === 'text' && /\S/.test(c.data));
+
+const inlineOnlyEl = (el) => {
+  try {
+    inlineOf(el);
+    return true;
+  } catch (e) {
+    if (e instanceof Unsupported) return false;
+    throw e;
+  }
+};
+
+/* Cards whose bodies differ (each starts with the same header row - number +
+   title - then its own mix of paragraphs, sub-options, lists). */
+function freeCards(el, cards, sigOf) {
+  const heads = cards.map((c) => tagsOf(c)[0]);
+  if (new Set(heads.map(sigOf)).size !== 1) throw new Unsupported('cards: parts differ');
+  const h = heads[0];
+  const [b, t] = tagsOf(h);
+  if (tagsOf(h).length !== 2 || !/^h[2-5]$/.test(t.name)) throw new Unsupported('cards: no header row');
+  return {
+    _type: 'articleCards',
+    _key: key('ac'),
+    design: {
+      ...design(el),
+      cardTag: cards[0].name,
+      cardClass: cls(cards[0]) || undefined,
+      parts: [{ tag: h.name, className: cls(h) || undefined, role: 'header', inner: [b, t].map((x) => ({ tag: x.name, className: cls(x) || undefined })) }, { role: 'content' }],
+    },
+    cards: cards.map((c) => {
+      const [hd, ...rest] = c.children.filter((n) => n.type !== 'comment' && !(n.type === 'text' && !/\S/.test(n.data)));
+      const [bb, tt] = tagsOf(hd);
+      return { _key: key('cd'), badge: lineOf(bb), title: lineOf(tt), content: contentOf(rest) };
     }),
   };
 }
@@ -388,41 +454,76 @@ function articleItem(el) {
   if (el.name === 'a') {
     const newTab = el.attribs.target === '_blank';
     noAttrs(el, ['class', 'href', ...(newTab ? ['target', 'rel'] : [])]);
-    return { _type: 'articleButton', _key: key('ab'), design: design(el), label: textOf(el), href: el.attribs.href, newTab: newTab || undefined };
+    return { _type: 'articleButton', _key: key('ab'), design: design(el), label: lineOf(el), href: el.attribs.href, newTab: newTab || undefined };
   }
   // A styled bullet list.
   if ((el.name === 'ul' || el.name === 'ol') && tagsOf(el).every((li) => li.name === 'li' && !Object.keys(li.attribs).length)) {
     noAttrs(el, ['class']);
     return { _type: 'articleList', _key: key('al'), design: design(el), items: tagsOf(el).map((li) => ({ _key: key('li'), text: lineOf(li) })) };
   }
-  const kids = tagsOf(el);
+  // A note made of one sentence with links / bold (no paragraphs).
+  if (el.name === 'div' && inlineOnlyEl(el)) {
+    noAttrs(el, ['class']);
+    const { children, markDefs } = inlineOf(el);
+    return { _type: 'articleBox', _key: key('ax'), design: design(el), body: [{ _type: 'block', _key: key('b'), style: 'plain', markDefs, children }] };
+  }
+  const kids = (el.children ?? []).filter((c) => c.type === 'tag');
+  if ((el.children ?? []).some((c) => c.type === 'text' && /\S/.test(c.data))) throw new Unsupported('loose text');
   // <div class><img/></div>
   if (el.name === 'div' && kids.length === 1 && kids[0].name === 'img') {
     noAttrs(el, ['class']);
     noAttrs(kids[0], ['src', 'alt']);
     return { _type: 'articleImage', _key: key('ai'), design: design(el), picture: { src: kids[0].attribs.src, alt: kids[0].attribs.alt ?? '' } };
   }
-  if (el.name === 'div' && kids.length === 1 && kids[0].name === 'a' && !el.children.some((c) => c.type === 'text' && /\S/.test(c.data))) {
-    const a = noAttrs(kids[0], ['class', 'href']);
-    return { _type: 'articleButton', _key: key('ab'), design: { ...design(a), wrapTag: el.name, wrapClass: cls(el) || undefined }, label: textOf(a), href: a.attribs.href };
+  if (el.name === 'div' && kids.length === 1 && kids[0].name === 'a') {
+    const a = kids[0];
+    if (a.attribs.target !== '_blank') noAttrs(a, ['class', 'href']);
+    const newTab = a.attribs.target === '_blank';
+    if (newTab) noAttrs(a, ['class', 'href', 'target', 'rel']);
+    return { _type: 'articleButton', _key: key('ab'), design: { ...design(a), wrapTag: el.name, wrapClass: cls(el) || undefined }, label: lineOf(a), href: a.attribs.href, newTab: newTab || undefined };
   }
-  // <div.x-consultation-cta><div.x-cta-content><h3/><p/><a/></div></div>
-  if (kids.length === 1 && tagsOf(kids[0]).length === 3) {
-    const [h3, p, a] = tagsOf(kids[0]);
-    if (h3.name === 'h3' && p.name === 'p' && a.name === 'a') {
+  // <div.x-consultation-cta><div.x-cta-content><h3/>[<p/>]<a/></div></div>
+  if (kids.length === 1 && [2, 3].includes(elsOf(kids[0]).length) && !textIn(kids[0])) {
+    const parts = elsOf(kids[0]);
+    const [h3, p, a] = parts.length === 3 ? parts : [parts[0], null, parts[1]];
+    if (h3.name === 'h3' && (!p || p.name === 'p') && a.name === 'a') {
       noAttrs(h3);
-      noAttrs(p);
+      if (p) noAttrs(p);
       noAttrs(a, ['class', 'href']);
       return {
         _type: 'articleCallout',
         _key: key('ao'),
         design: { className: cls(el), innerClass: cls(kids[0]), buttonClass: cls(a) },
         heading: textOf(h3),
-        text: lineOf(p),
+        text: p ? lineOf(p) : undefined,
         buttonLabel: textOf(a),
         buttonHref: a.attribs.href,
       };
     }
+  }
+  // Note with an icon: <div><div.icon>✦</div><p/>…</div>
+  if (el.name === 'div' && kids.length >= 2 && kids[0].name === 'div' && !elsOf(kids[0]).length && textIn(kids[0]) && kids.slice(1).every(isSimple)) {
+    noAttrs(el, ['class']);
+    noAttrs(kids[0], ['class']);
+    return {
+      _type: 'articleNote',
+      _key: key('an'),
+      design: { ...design(el), iconClass: cls(kids[0]) || undefined },
+      icon: textOf(kids[0]),
+      body: richOf({ children: kids.slice(1) }),
+    };
+  }
+  // Picture beside text: <div><div><img/></div><div><p/>…</div></div>
+  if (el.name === 'div' && kids.length === 2 && elsOf(kids[0]).length === 1 && elsOf(kids[0])[0].name === 'img' && !textIn(kids[1]) && elsOf(kids[1]).every(isSimple)) {
+    noAttrs(el, ['class']);
+    const img = noAttrs(elsOf(kids[0])[0], ['src', 'alt']);
+    return {
+      _type: 'articleMedia',
+      _key: key('am'),
+      design: { ...design(el), imageClass: cls(kids[0]) || undefined, textClass: cls(kids[1]) || undefined },
+      picture: { src: img.attribs.src, alt: img.attribs.alt ?? '' },
+      body: richOf(kids[1]),
+    };
   }
   try {
     return articleCards(el);
@@ -431,6 +532,28 @@ function articleItem(el) {
   }
   // A box of plain text (note, intro text, list card).
   return { _type: 'articleBox', _key: key('ax'), design: design(noAttrs(el, ['class'])), body: richOf(el) };
+}
+
+/** Section / card content: runs of paragraphs, headings and lists become one
+    "Text"; anything else is a card grid, list, box, picture or button. */
+function contentOf(nodes) {
+  const content = [];
+  let run = [];
+  const flush = () => {
+    if (run.length) content.push({ _type: 'articleText', _key: key('at'), body: richOf({ children: run }) });
+    run = [];
+  };
+  for (const n of nodes) {
+    if (n.type === 'comment' || (n.type === 'text' && !/\S/.test(n.data))) continue;
+    if (n.type === 'text') throw new Unsupported('loose text');
+    if (isSimple(n)) run.push(n);
+    else {
+      flush();
+      content.push(articleItem(n));
+    }
+  }
+  flush();
+  return content;
 }
 
 function articleSection(el) {
@@ -452,20 +575,7 @@ function articleSection(el) {
     if (cls(h)) sec.design.headingClass = cls(h);
     nodes = nodes.slice(1);
   }
-  let run = [];
-  const flush = () => {
-    if (run.length) sec.content.push({ _type: 'articleText', _key: key('at'), body: richOf({ children: run }) });
-    run = [];
-  };
-  for (const n of nodes) {
-    if (n.type === 'text') throw new Unsupported('loose text');
-    if (isSimple(n)) run.push(n);
-    else {
-      flush();
-      sec.content.push(articleItem(n));
-    }
-  }
-  flush();
+  sec.content = contentOf(nodes);
   return sec;
 }
 
@@ -490,7 +600,7 @@ function article(el, $) {
       delete c._reason;
       b.sections.push(c);
       b._fallbacks = (b._fallbacks ?? 0) + 1;
-      (b._why ??= []).push(`${cls(n)}: ${e.message}`);
+      (b._why ??= []).push(`${cls(n)}: ${e.message}${process.env.PARSE_DEBUG ? " @ " + e.stack.split("\n").slice(1, 4).map((l) => l.trim().replace(/^at /, "").replace(/\(.*\/(\w[\w-]*\.mjs):(\d+).*\)/, "$1:$2")).join(" < ") : ""}`);
     }
   }
   return b;
@@ -682,6 +792,65 @@ function linkGroups(el) {
   };
 }
 
+function contactSection(el) {
+  expect(el, 'section', 'contact-section');
+  const [box, maps] = only(el, 2, 'contact');
+  expect(box, 'div', 'contact-container');
+  const [formWrap, info] = only(box, 2, 'contact container');
+  expect(formWrap, 'div', 'contact-form-wrapper');
+  const [h2, form] = only(formWrap, 2, 'contact form wrapper');
+  expect(form, 'form', 'contact-form');
+  const label = (name) => {
+    const field = (form.children ?? []).length && cheerioFind(form, (n) => n.attribs?.name === name);
+    const group = field?.parent;
+    const lab = group && elsOf(group).find((c) => c.name === 'label');
+    return lab ? textOf(lab) : undefined;
+  };
+  const select = cheerioFind(form, (n) => n.name === 'select');
+  const button = cheerioFind(form, (n) => n.name === 'button');
+  expect(info, 'div', 'contact-info');
+  const [infoTitle, ...boxes] = tagsOf(info);
+  expect(maps, 'div', 'map-grid');
+  return {
+    _type: 'contactSection',
+    _key: key('cs'),
+    formTitle: textOf(h2),
+    labels: { name: label('full_name'), phone: label('phone'), email: label('email'), concern: label('concern'), message: label('message') },
+    concerns: elsOf(select).map((o) => textOf(o)),
+    buttonLabel: textOf(button),
+    infoTitle: textOf(infoTitle),
+    details: boxes.map((bx) => {
+      expect(bx, 'div', 'info-box');
+      const [icon, body] = only(bx, 2, 'info box');
+      const [span, value, note] = tagsOf(body);
+      return {
+        _key: key('cd'),
+        icon: textOf(icon),
+        color: cls(icon).split(/\s+/)[1] || 'gold',
+        label: textOf(span),
+        value: textOf(value),
+        href: value.name === 'a' ? value.attribs.href : undefined,
+        note: note ? textOf(note) : undefined,
+      };
+    }),
+    maps: tagsOf(maps).map((m) => {
+      expect(m, 'div', 'map-box');
+      const [f] = only(m, 1, 'map');
+      expect(f, 'iframe');
+      return { _key: key('mp'), title: f.attribs.title, embedUrl: f.attribs.src };
+    }),
+  };
+}
+const cheerioFind = (root, test) => {
+  for (const c of root.children ?? []) {
+    if (c.type !== 'tag') continue;
+    if (test(c)) return c;
+    const f = cheerioFind(c, test);
+    if (f) return f;
+  }
+  return null;
+};
+
 /** The /blogs grid is generated from the blog posts. */
 function postGrid(el) {
   expect(el, 'section', 'blog-section');
@@ -728,6 +897,7 @@ const PARSERS = {
   'reviva-signature-wrap': signatureTreatments,
   'sitemap-container': linkGroups,
   'blog-section': postGrid,
+  'contact-section': contactSection,
 };
 export const registerParser = (className, fn) => (PARSERS[className] = fn);
 
