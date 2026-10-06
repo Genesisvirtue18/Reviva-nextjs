@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getDoc, getPostCards, getSettings, pageBody, toUrlPath } from '@/lib/content';
+import { getDoc, getPostCards, getSettings, toUrlPath } from '@/lib/content';
 import { Blocks, WhatsAppButton } from '@/components/blocks';
 import { PostView } from '@/components/blog';
 
@@ -29,10 +29,7 @@ export default async function SitePage({ params }: PageProps<'/[[...path]]'>) {
     );
   }
 
-  // Offline copy of the old site (no Sanity configured): stored HTML.
-  if (!doc.blocks) return <div id="main" tabIndex={-1} dangerouslySetInnerHTML={{ __html: pageBody(doc) }} />;
-
-  const posts = doc.blocks.some((b) => b._type === 'postGrid') ? await getPostCards() : [];
+  const posts = doc.blocks?.some((b) => b._type === 'postGrid') ? await getPostCards() : [];
   return (
     <div id="main" tabIndex={-1}>
       <div className="rv-scrim"></div>

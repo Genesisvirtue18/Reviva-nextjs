@@ -1,16 +1,14 @@
 import type { NextConfig } from 'next';
 import { createClient } from '@sanity/client';
-import fallbackRedirects from './content/redirects.json';
 import type { Redirect } from './lib/types';
 
-/* Redirects are edited in Sanity (Redirects) and read at build time; the
-   JSON snapshot of the old .htaccess is used until Sanity is connected. */
+/* Redirects are edited in Sanity (Redirects) and read at build time. */
 async function loadRedirects(): Promise<Redirect[]> {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  if (!projectId) return fallbackRedirects;
+  if (!projectId) throw new Error('NEXT_PUBLIC_SANITY_PROJECT_ID is not set - all site content comes from Sanity.');
   const client = createClient({ projectId, dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production', apiVersion: '2025-01-01', useCdn: false, perspective: 'published', token: process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_WRITE_TOKEN });
   const fromCms = await client.fetch<Redirect[]>(`*[_type == "redirect" && defined(source) && defined(destination)]{source, destination}`);
-  return fromCms.length ? fromCms : fallbackRedirects;
+  return fromCms;
 }
 
 // Old PHP URLs of the landing pages served by app/lp/[slug].
@@ -19,12 +17,6 @@ const LANDING_PAGES = ['skin-care-clinic-in-noida', 'skin-clinic-in-noida'];
 const nextConfig: NextConfig = {
   experimental: {
     globalNotFound: true,
-  },
-
-  // The content JSON is read from disk at runtime when Sanity isn't configured.
-  outputFileTracingIncludes: {
-    '/[[...path]]': ['./content/pages/**/*'],
-    '/lp/[slug]': ['./public/lp/*/index.html'],
   },
 
   async redirects() {

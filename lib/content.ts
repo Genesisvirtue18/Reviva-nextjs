@@ -1,18 +1,13 @@
 import 'server-only';
-import fs from 'node:fs';
-import path from 'node:path';
 import { cache } from 'react';
 import { defineQuery } from 'next-sanity';
 import { client } from './sanity';
-import { defaultSettings } from './defaults';
 import { renderFields } from './render-fields';
 import type { DocMeta, Page, PageSection, SiteSettings } from './types';
 import type { Post, PostCard } from '@/components/blog';
 
-/* Content comes from Sanity when it is configured, otherwise from the JSON
-   snapshot of the old site in content/pages (written by
-   scripts/extract-html.mjs). Tagged fetches let the Sanity webhook refresh
-   pages the moment an editor publishes. */
+/* All content comes from Sanity (there is no offline copy). Tagged fetches
+   let the Sanity webhook refresh pages the moment an editor publishes. */
 
 const FETCH_OPTS = { next: { revalidate: 3600, tags: ['sanity'] } };
 
@@ -20,8 +15,7 @@ const FETCH_OPTS = { next: { revalidate: 3600, tags: ['sanity'] } };
 const html = (f: string) => `"${f}": coalesce(${f}.code, ${f})`;
 const META = `_id, title, metaDescription, bodyClass, ${html('headHtml')}, ${html('bodyStartHtml')}, ${html('bodyEndHtml')}`;
 const PAGE_QUERY = defineQuery(`*[_type == "page" && path == $path][0]{
-  ${META}, path, name, blocks, whatsapp, scriptsHtml,
-  "contentHtml": coalesce(contentHtml.code, ""), "templateHtml": templateHtml.code, sections }`);
+  ${META}, path, name, blocks, whatsapp, scriptsHtml }`);
 const POST_FIELDS = `title, "path": "/blog/" + slug.current, publishedAt, readMinutes, excerpt, cover`;
 const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slug][0]{
   ${META}, ${POST_FIELDS}, author, body, design, seoTitle }`);
@@ -51,11 +45,6 @@ function parseDesign<T>(v: T): T {
   return v;
 }
 
-const localPages = cache((): Page[] => {
-  const dir = path.join(process.cwd(), 'content/pages');
-  return fs.readdirSync(dir).map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) as Page);
-});
-
 /** Route segments -> the page's path ("/", "/acne", "/blog/x"). */
 export const toUrlPath = (segments?: string[]) => '/' + (segments ?? []).map(decodeURIComponent).join('/');
 
@@ -63,19 +52,18 @@ const normalise = (p: string) => p.replace(/\/+$/, '') || '/';
 
 export const getPage = cache(async (urlPath: string): Promise<Page | null> => {
   const p = normalise(urlPath);
-  if (client) return parseDesign(await client.fetch<Page | null>(PAGE_QUERY, { path: p }, FETCH_OPTS));
-  return localPages().find((pg) => pg.path === p) ?? null;
+  return parseDesign(await client.fetch<Page | null>(PAGE_QUERY, { path: p }, FETCH_OPTS));
 });
 
 /** A blog post by its address (/blog/<slug>). */
 export const getPost = cache(async (urlPath: string): Promise<(Post & DocMeta) | null> => {
   const m = normalise(urlPath).match(/^\/blog\/([^/]+)$/);
-  if (!m || !client) return null;
+  if (!m) return null;
   return parseDesign(await client.fetch<(Post & DocMeta) | null>(POST_QUERY, { slug: m[1] }, FETCH_OPTS));
 });
 
 /** Every post, newest first (blog grid, sidebar, previous / next). */
-export const getPostCards = cache(async (): Promise<PostCard[]> => (client ? client.fetch<PostCard[]>(CARDS_QUERY, {}, FETCH_OPTS) : []));
+export const getPostCards = cache(async (): Promise<PostCard[]> => client.fetch<PostCard[]>(CARDS_QUERY, {}, FETCH_OPTS));
 
 /** A page or a blog post at this address, with the fields the layout needs. */
 export const getDoc = cache(async (urlPath: string) => {
@@ -87,34 +75,39 @@ export const getDoc = cache(async (urlPath: string) => {
 });
 
 export async function getAllPaths(): Promise<string[]> {
-  if (client) return client.fetch<string[]>(PATHS_QUERY, {}, FETCH_OPTS);
-  return localPages().map((pg) => pg.path);
+  return client.fetch<string[]>(PATHS_QUERY, {}, FETCH_OPTS);
 }
 
-const filled = (o: object) => Object.fromEntries(Object.entries(o).filter(([, v]) => v != null && v !== ''));
+/* Shapes only (no content): an empty field in Site Settings shows nothing
+   rather than breaking the page. */
+const EMPTY: SiteSettings = {
+  logo: '', logoAlt: '', callDisplay: '', callTel: '', bookUrl: '', nav: [], footerBlurb: '',
+  social: { facebook: '', instagram: '', youtube: '', x: '' },
+  footerTreatments: [], footerClinic: [], locations: [], email: '', hours: '', legal: [],
+  bookLabel: '', bookLabelShort: '', footerHeadings: { treatments: '', clinic: '', visit: '', hours: '' }, copyright: '',
+  notFound: { eyebrow: '', title: '', buttonLabel: '', buttonHref: '/' }, whatsappUrl: '',
+  postCta: { eyebrow: '', title: '', text: '', altText: '', whatsappLabel: '', whatsappHref: '', bookLabel: '', bookHref: '' },
+  blogSidebar: { treatmentsTitle: '', treatments: [], ctaEyebrow: '', ctaTitle: '', ctaText: '', ctaButtonLabel: '', ctaButtonHref: '' },
+};
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
-  if (!client) return defaultSettings;
-  const { logoImageUrl, ...s } =
-    (await client.fetch<(Partial<SiteSettings> & { logoImageUrl?: string }) | null>(SETTINGS_QUERY, {}, FETCH_OPTS)) ?? {};
-  // Any field left blank in the Studio keeps the original site's value - also
-  // inside grouped fields like footerHeadings.
-  const merged: Record<string, unknown> = { ...defaultSettings };
-  for (const [k, v] of Object.entries(filled(s))) {
-    const d = merged[k];
-    merged[k] = d && typeof d === 'object' && !Array.isArray(d) && typeof v === 'object' && !Array.isArray(v) ? { ...d, ...filled(v) } : v;
+  const s = await client.fetch<(Partial<SiteSettings> & { logoImageUrl?: string }) | null>(SETTINGS_QUERY, {}, FETCH_OPTS);
+  if (!s) throw new Error('The "Site Settings" document is missing in Sanity.');
+  const { logoImageUrl, ...rest } = s;
+  const out: Record<string, unknown> = { ...EMPTY };
+  for (const [k, v] of Object.entries(rest)) {
+    if (v == null || k.startsWith('_')) continue;
+    const e = (EMPTY as Record<string, unknown>)[k];
+    out[k] = e && typeof e === 'object' && !Array.isArray(e) && typeof v === 'object' ? { ...e, ...v } : v;
   }
-  if (logoImageUrl) merged.logo = logoImageUrl;
-  return merged as SiteSettings;
+  if (logoImageUrl) out.logo = logoImageUrl;
+  return out as SiteSettings;
 });
 
-/** Full HTML of an /lp/ landing page from Sanity, or null to use the bundled copy. */
+/** Full HTML of an /lp/ landing page. */
 export async function getLandingHtml(slug: string): Promise<string | null> {
-  if (!client) return null;
   const lp = await client.fetch<{ html?: string; templateHtml?: string; sections?: PageSection[] } | null>(LANDING_QUERY, { slug }, FETCH_OPTS);
   if (!lp) return null;
   return lp.templateHtml ? renderFields(lp.templateHtml, lp.sections) : (lp.html ?? null);
 }
 
-/** The page body: the layout filled with the editable sections, or the stored HTML. */
-export const pageBody = (page: Page) => (page.templateHtml ? renderFields(page.templateHtml, page.sections) : page.contentHtml);

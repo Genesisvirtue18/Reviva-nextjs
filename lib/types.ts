@@ -60,17 +60,11 @@ export type DocMeta = {
 
 export type Page = DocMeta & {
   path: string;
-  pageType?: 'page' | 'blog';
   name?: string;
   /** Page-builder sections (components/blocks). */
   blocks?: { _type: string; _key: string; [k: string]: unknown }[];
   whatsapp?: boolean;
   scriptsHtml?: string;
-  /** Old-site HTML: only used by the offline copy in content/pages. */
-  contentHtml: string;
-  /** Layout with data-cms slots; when set, the page is built from `sections`. */
-  templateHtml?: string;
-  sections?: PageSection[];
 };
 
 /* Editable page fields (see scripts/lib/html-fields.mjs). */
