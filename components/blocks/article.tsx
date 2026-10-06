@@ -1,7 +1,5 @@
 import { createElement } from 'react';
 import { Inline, Rich, type Block, type RichValue } from '@/lib/rich';
-import { renderFields } from '@/lib/render-fields';
-import type { PageSection } from '@/lib/types';
 import { pictureSrc, type Picture } from '@/lib/image';
 
 /* Long-form treatment / clinic pages (Home article, About, Acne, HIFU...).
@@ -52,8 +50,7 @@ export type ArticleSection = {
   heading?: RichValue;
   content?: ArticleItem[];
 };
-export type ArticleBlock = { _type: 'article'; _key: string; design?: Design & { innerTag?: string; innerClass?: string }; sections?: (ArticleSection | CustomPart)[] };
-type CustomPart = { _type: 'customSection'; _key: string; templateHtml?: string; groups?: PageSection[] };
+export type ArticleBlock = { _type: 'article'; _key: string; design?: Design & { innerTag?: string; innerClass?: string }; sections?: ArticleSection[] };
 
 const Line = ({ value }: { value?: RichValue | string }) => {
   if (typeof value === 'string') return <>{value}</>; // older plain-text values
@@ -166,12 +163,7 @@ function Item({ it }: { it: ArticleItem }) {
 }
 
 export function Article({ b }: { b: ArticleBlock }) {
-  const sections = (b.sections ?? []).map((s) => {
-      if ('_type' in s && s._type === 'customSection') {
-        // A section with a one-off design: fixed layout, text/image fields.
-        return <div key={s._key} style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: renderFields(s.templateHtml ?? '', s.groups) }} />;
-      }
-      const sec = s as ArticleSection;
+  const sections = (b.sections ?? []).map((sec) => {
       const d = sec.design ?? {};
       return createElement(
         d.tag ?? 'div',

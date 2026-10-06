@@ -144,7 +144,6 @@ function build(S: StructureBuilder, { settings, pages }: Data) {
         .icon(FolderIcon)
         .child(docList('Other pages', '_type == "page" && !(path in $used)', { used: [...used] })),
       S.documentTypeListItem('landingPage').title('Ad landing pages'),
-      S.documentTypeListItem('imageAsset').title('Image library'),
       S.divider(),
       S.listItem()
         .title('Enquiries')

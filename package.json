@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "sanity:migrate-blocks": "node --env-file=.env.local scripts/migrate-to-blocks.mjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "@sanity/client": "^8.9.0",
