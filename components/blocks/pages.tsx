@@ -1,5 +1,6 @@
 import { Inline, Lines, Rich, type Block, type RichValue } from '@/lib/rich';
 import { pictureSrc, type Picture } from '@/lib/image';
+import { GalleryFilterBar, GalleryPhotos } from '@/components/gallery';
 
 /* Heroes, galleries and legal pages. Original markup and class names. */
 
@@ -79,30 +80,10 @@ export function LegalContent({ b }: { b: LegalContentBlock }) {
 
 export type GalleryFiltersBlock = { _type: 'galleryFilters'; _key: string; links?: { _key: string; label?: string; href?: string }[] };
 export function GalleryFilters({ b }: { b: GalleryFiltersBlock }) {
-  return (
-    <section className="filter-section">
-      <div className="filter-buttons">
-        {(b.links ?? []).map((l) => (
-          <a className="filter-btn" href={l.href} key={l._key}>
-            {l.label}
-          </a>
-        ))}
-      </div>
-    </section>
-  );
+  return <GalleryFilterBar links={(b.links ?? []).map((l) => ({ key: l._key, label: l.label ?? '', href: l.href ?? '#' }))} />;
 }
 
 export type GalleryGridBlock = { _type: 'galleryGrid'; _key: string; photos?: (Picture & { _key: string })[] };
 export function GalleryGrid({ b }: { b: GalleryGridBlock }) {
-  return (
-    <section className="gallery-section">
-      <div className="gallery-grid">
-        {(b.photos ?? []).map((p) => (
-          <div className="gallery-item" key={p._key}>
-            <img src={pictureSrc(p)} alt={p.alt ?? ''} />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  return <GalleryPhotos photos={(b.photos ?? []).map((p) => ({ key: p._key, src: pictureSrc(p) ?? '', alt: p.alt ?? '' })).filter((p) => p.src)} />;
 }

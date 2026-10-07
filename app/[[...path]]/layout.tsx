@@ -25,6 +25,7 @@ const STYLESHEETS = [
   `/assets/css/style.css?v=${SCRIPT_VERSION}`,
   `/assets/css/responsive.css?v=${SCRIPT_VERSION}`,
   `/assets/css/articles.css?v=${SCRIPT_VERSION}`,
+  `/assets/css/gallery.css?v=${SCRIPT_VERSION}`,
 ];
 
 export async function generateMetadata({ params }: LayoutProps<'/[[...path]]'>): Promise<Metadata> {
