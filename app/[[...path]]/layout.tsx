@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { notFound, permanentRedirect } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { SiteScript } from '@/components/SiteScript';
 import { getDoc, getRedirect, getSettings, toUrlPath } from '@/lib/content';
 import { absoluteImage } from '@/lib/image';
 
@@ -98,7 +99,7 @@ export default async function SiteLayout({ children, params }: LayoutProps<'/[[.
         <Header s={s} path={urlPath} />
         {children}
         <Footer s={s} />
-        <script src={`/assets/js/custom.js?v=${SCRIPT_VERSION}`} defer></script>
+        <SiteScript src={`/assets/js/custom.js?v=${SCRIPT_VERSION}`} />
         {s.gaId ? (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${s.gaId}`} strategy="afterInteractive" />
